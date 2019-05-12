@@ -1,0 +1,33 @@
+jobs:
+  - job: macOS
+    pool:
+      name: Default
+
+    steps:
+    - task: NuGetToolInstaller@0
+
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '**/*.sln'
+
+    - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
+      displayName: 'Build SwissAddinKnife'
+
+    - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack src/bin/Release/net461/SwissAddinKnife.dll
+      displayName: 'Build vs4mac Addin'
+
+    - script: mv SwissAddinKnife.*.mpack  $(Build.ArtifactStagingDirectory)/
+      displayName: 'Copy addin'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        artifactName: 'Addin'
+        targetPath: $(Build.ArtifactStagingDirectory)
+
+    - task: GitHubRelease@0
+      inputs:
+        gitHubConnection: Connection pipeline
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'        
+        tagSource: 'auto'
