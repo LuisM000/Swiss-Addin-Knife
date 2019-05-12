@@ -1,5 +1,6 @@
 name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
+
 jobs:
   - job: macOS
     pool:
@@ -15,7 +16,7 @@ jobs:
     - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
       displayName: 'Build SwissAddinKnife'
 
-    - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack src/bin/Release/net461/SwissAddinKnife.dll
+    - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack SwissAddinKnife/bin/Release/net471/SwissAddinKnife.dll
       displayName: 'Build vs4mac Addin'
 
     - script: mv SwissAddinKnife.*.mpack  $(Build.ArtifactStagingDirectory)/
