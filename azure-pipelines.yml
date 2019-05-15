@@ -1,5 +1,12 @@
-name: Swiss-Addin-Knife
+name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
+trigger:
+  branches:
+    include:
+    - master
+  tags:
+    include:
+      - '*'
 
 jobs:
   - job: macOS
