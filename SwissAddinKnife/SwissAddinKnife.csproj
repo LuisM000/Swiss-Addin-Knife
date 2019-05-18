@@ -5,4 +5,14 @@
   <ItemGroup>
     <PackageReference Include="MonoDevelop.Addins" Version="0.4.6" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\" />
+    <Folder Include="Features\JsonToClass\" />
+    <Folder Include="Features\JsonToClass\Commands\" />
+    <Folder Include="Features\JsonToClass\Exceptions\" />
+    <Folder Include="Features\JsonToClass\Model\" />
+    <Folder Include="Features\JsonToClass\Services\" />
+    <Folder Include="Features\JsonToClass\Views\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>

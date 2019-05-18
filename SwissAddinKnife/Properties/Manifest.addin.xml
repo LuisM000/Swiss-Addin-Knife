@@ -10,8 +10,24 @@
     </Header>
     
     <Extension path = "/MonoDevelop/Ide/MainMenu">
-        <ItemSet id="SwissKnife" _label="Swiss Knife" insertafter="Tools"></ItemSet>
+        <ItemSet id="SwissKnife" _label="Swiss Knife" insertafter="Tools">
+        </ItemSet>
     </Extension> 
+    
+   <Extension path="/MonoDevelop/Ide/Pads">
+        <Pad 
+            id="VS4Mac.JsonToClass.Views.JsonToClassGeneratorView"
+            _label="JSON to class generator"
+            icon="md-information"
+            class="SwissAddinKnife.Features.JsonToClass.Views.JsonToClassGeneratorView"
+            defaultPlacement="right"/>
+    </Extension>
+    
+    <Extension 
+        path="/MonoDevelop/Ide/ContextMenu/ProjectPad">      
+        <CommandItem 
+            id="SwissAddinKnife.Commands.AddCodeClassFile" />  
+    </Extension>
     
     <Extension path = "/MonoDevelop/Ide/MainMenu/SwissKnife" extension-nodes="CommandItem, SeparatorItem">
         <CommandItem 
@@ -20,9 +36,13 @@
             id="SwissAddinKnife.Commands.OpenImageAssetsGenerator" />
         <SeparatorItem/>
         <CommandItem 
-            id="SwissAddinKnife.Commands.JsonToClassGenerator" />
+            id="SwissAddinKnife.Commands.OpenJsonToClassGeneratorView" />
+        <CommandItem 
+            id="SwissAddinKnife.Commands.CreateCodeClassFromJson" />
+        <CommandItem 
+            id="SwissAddinKnife.Commands.AddCodeClassFile" />
     </Extension>
-    
+
     <Extension 
         path = "/MonoDevelop/Ide/Commands">
         <Command 
@@ -31,11 +51,18 @@
          <Command 
             id = "SwissAddinKnife.Commands.OpenImageAssetsGenerator"
             _label = "Assets generator" />
-        
         <Command 
-            id = "SwissAddinKnife.Commands.JsonToClassGenerator"
+            id = "SwissAddinKnife.Commands.OpenJsonToClassGeneratorView"
+            defaultHandler = "SwissAddinKnife.Features.JsonToClass.Commands.OpenJsonToClassGeneratorViewCommand" 
             _label = "JSON to class generator" />
-        
+        <Command 
+            id = "SwissAddinKnife.Commands.CreateCodeClassFromJson"
+            defaultHandler = "SwissAddinKnife.Features.JsonToClass.Commands.CreateCodeClassFromJsonCommand" 
+            _label = "Paste JSON as code" />
+        <Command 
+            id = "SwissAddinKnife.Commands.AddCodeClassFile"
+            defaultHandler = "SwissAddinKnife.Features.JsonToClass.Commands.AddCodeClassFileCommand" 
+            _label = "Create class file from JSON" />
     </Extension>
     
 </Addin>
