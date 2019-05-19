@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoDevelop.Addins" Version="0.4.6" />
+    <PackageReference Include="ImageGeneratorXF" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -14,5 +15,10 @@
     <Folder Include="Features\JsonToClass\Services\" />
     <Folder Include="Features\JsonToClass\Views\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Features\AssetsGenerator\" />
+    <Folder Include="Features\AssetsGenerator\Commands\" />
+    <Folder Include="Features\AssetsGenerator\Utils\" />
+    <Folder Include="Features\AssetsGenerator\Views\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>

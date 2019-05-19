@@ -47,9 +47,11 @@
         path = "/MonoDevelop/Ide/Commands">
         <Command 
             id = "SwissAddinKnife.Commands.OpenGenerator"
+            defaultHandler = "SwissAddinKnife.Features.AssetsGenerator.Commands.OpenGeneratorCommand" 
             _label = "Image generator" />
          <Command 
             id = "SwissAddinKnife.Commands.OpenImageAssetsGenerator"
+            defaultHandler = "SwissAddinKnife.Features.AssetsGenerator.Commands.OpenImageAssetsGeneratorCommand" 
             _label = "Assets generator" />
         <Command 
             id = "SwissAddinKnife.Commands.OpenJsonToClassGeneratorView"
