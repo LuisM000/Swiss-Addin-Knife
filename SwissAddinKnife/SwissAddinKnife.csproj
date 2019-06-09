@@ -20,5 +20,7 @@
     <Folder Include="Features\AssetsGenerator\Utils\" />
     <Folder Include="Features\AssetsGenerator\Views\" />
     <Folder Include="Utils\" />
+    <Folder Include="Features\AssetsInspector\" />
+    <Folder Include="Features\AssetsInspector\Core\" />
   </ItemGroup>
 </Project>
