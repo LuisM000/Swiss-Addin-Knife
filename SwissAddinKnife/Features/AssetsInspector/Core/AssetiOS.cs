@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using SwissAddinKnife.Utils;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Core
 {
     public class AssetiOS : AssetBase
     {
-        public string StandardFilePath { get; private set; }
-        public string X2FilePath { get; private set; }
-        public string X3FilePath { get; private set; }
+        public virtual string StandardFilePath { get; private set; }
+        public virtual string X2FilePath { get; private set; }
+        public virtual string X3FilePath { get; private set; }
 
         public AssetiOS(string filePath) : base(ExtractIdentifierFromFilePath(filePath))
         {
@@ -34,6 +38,19 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
             return true;
         }
 
+        
+        public override Result<IList<Condition>> Analize()
+        {
+            var assetConditions = new List<AssetCondition>()
+            {
+                new AllFilesiOSCondition(this),
+                new SizesFilesCondition(this)
+            };
+
+            IList<Condition> conditions = assetConditions.SelectMany(a => a.Verify()).ToList();
+
+            return new Result<IList<Condition>>(conditions.All(a => a.IsFulfilled), conditions);
+        }
 
         private void CheckAndSetFilePath(string filePath)
         {
@@ -59,6 +76,6 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
             }
 
             return identifier;
-        }       
+        }
     }
 }

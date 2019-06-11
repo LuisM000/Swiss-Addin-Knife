@@ -22,5 +22,7 @@
     <Folder Include="Utils\" />
     <Folder Include="Features\AssetsInspector\" />
     <Folder Include="Features\AssetsInspector\Core\" />
+    <Folder Include="Features\AssetsInspector\Services\" />
+    <Folder Include="Features\AssetsInspector\Core\AssetsConditions\" />
   </ItemGroup>
 </Project>

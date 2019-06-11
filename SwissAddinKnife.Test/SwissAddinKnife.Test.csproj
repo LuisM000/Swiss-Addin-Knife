@@ -29,6 +29,20 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.11.0\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -38,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetsInspector\AssetiOSShould.cs" />
+    <Compile Include="AssetsInspector\AllFilesiOSConditionShould.cs" />
+    <Compile Include="AssetsInspector\SizesFilesConditionShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SwissAddinKnife\SwissAddinKnife.csproj">
