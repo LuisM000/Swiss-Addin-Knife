@@ -44,7 +44,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
             var assetConditions = new List<AssetCondition>()
             {
                 new AllFilesiOSCondition(this),
-                new SizesFilesCondition(this)
+                new SizesFilesiOSCondition(this)
             };
 
             IList<Condition> conditions = assetConditions.SelectMany(a => a.Verify()).ToList();

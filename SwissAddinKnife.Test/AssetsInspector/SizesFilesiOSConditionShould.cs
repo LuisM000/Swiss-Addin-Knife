@@ -10,7 +10,7 @@ using SwissAddinKnife.Features.AssetsInspector.Services;
 namespace SwissAddinKnife.Test.AssetsInspector
 {
     [TestFixture]
-    public class SizesFilesConditionShould
+    public class SizesFilesiOSConditionShould
     {
         [Test]
         public void ReturnsTrueIfX2AssetIsDoubleAndX3IsTriple()
@@ -26,7 +26,7 @@ namespace SwissAddinKnife.Test.AssetsInspector
             imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(10, 16));
             imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(15, 24));
 
-            SizesFilesCondition sizesFilesCondition = new SizesFilesCondition(assetiOS.Object, imageService.Object);
+            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, imageService.Object);
 
             Assert.IsTrue(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
@@ -45,7 +45,7 @@ namespace SwissAddinKnife.Test.AssetsInspector
             imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(10 + 1, 16 + 1));
             imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(15 + 1, 24 + 1));
 
-            SizesFilesCondition sizesFilesCondition = new SizesFilesCondition(assetiOS.Object, imageService.Object);
+            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, imageService.Object);
 
             Assert.IsTrue(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
@@ -69,7 +69,7 @@ namespace SwissAddinKnife.Test.AssetsInspector
             imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(widthX2, heightX2));
             imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(widthX3, heightX3));
 
-            SizesFilesCondition sizesFilesCondition = new SizesFilesCondition(assetiOS.Object, imageService.Object);
+            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, imageService.Object);
 
             Assert.IsFalse(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }

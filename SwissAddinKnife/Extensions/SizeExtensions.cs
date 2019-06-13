@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using SwissAddinKnife.Utils;
 
-namespace SwissAddinKnife.Utils
+namespace SwissAddinKnife.Extensions
 {
-    public static class SizeUtils
+    public static class SizeExtensions
     {
         public static Size Multiply(this Size size, double factor)
         {

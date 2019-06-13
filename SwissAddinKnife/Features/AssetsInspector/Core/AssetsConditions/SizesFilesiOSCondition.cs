@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using SwissAddinKnife.Features.AssetsInspector.Services;
-using SwissAddinKnife.Utils;
+using SwissAddinKnife.Extensions;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions
 {
-    public class SizesFilesCondition : AssetCondition
+    public class SizesFilesiOSCondition : AssetCondition
     {
         private readonly AssetiOS assetiOS;
         private readonly IImageService imageService;
 
-        public SizesFilesCondition(AssetiOS assetiOS, IImageService imageService = null)
+        public SizesFilesiOSCondition(AssetiOS assetiOS, IImageService imageService = null)
         {
             this.assetiOS = assetiOS;
             if (imageService == null)
@@ -30,7 +30,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions
             Condition conditionX3Size = new Condition("@3x file asset has triple resolution as the standard asset",
                 standardSize.Multiply(3).SizeEquals(x3Size, epsilon: 1));
 
-            return new List<Condition>(3) { conditionX2Size, conditionX3Size };
+            return new List<Condition>() { conditionX2Size, conditionX3Size };
         }
     }
 }

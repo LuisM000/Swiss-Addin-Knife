@@ -53,7 +53,10 @@
   <ItemGroup>
     <Compile Include="AssetsInspector\AssetiOSShould.cs" />
     <Compile Include="AssetsInspector\AllFilesiOSConditionShould.cs" />
-    <Compile Include="AssetsInspector\SizesFilesConditionShould.cs" />
+    <Compile Include="AssetsInspector\SizesFilesiOSConditionShould.cs" />
+    <Compile Include="AssetsInspector\AssetAndroidShould.cs" />
+    <Compile Include="AssetsInspector\AllFilesAndroidConditionShould.cs" />
+    <Compile Include="AssetsInspector\SizesFilesAndroidConditionShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SwissAddinKnife\SwissAddinKnife.csproj">
