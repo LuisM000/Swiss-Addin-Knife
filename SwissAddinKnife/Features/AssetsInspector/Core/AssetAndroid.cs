@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
 using SwissAddinKnife.Utils;
 
@@ -42,7 +43,15 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
 
         public override Result<IList<Condition>> Analize()
         {
-            throw new NotImplementedException();
+            var assetConditions = new List<AssetCondition>()
+            {
+                new AllFilesAndroidCondition(this),
+                new SizesFilesAndroidCondition(this)
+            };
+
+            IList<Condition> conditions = assetConditions.SelectMany(a => a.Verify()).ToList();
+
+            return new Result<IList<Condition>>(conditions.All(a => a.IsFulfilled), conditions);
         }
 
         private void CheckAndSetFilePath(string filePath)

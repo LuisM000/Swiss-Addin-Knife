@@ -24,5 +24,8 @@
     <Folder Include="Features\AssetsInspector\Core\" />
     <Folder Include="Features\AssetsInspector\Services\" />
     <Folder Include="Features\AssetsInspector\Core\AssetsConditions\" />
+    <Folder Include="Features\AssetsInspector\Commands\" />
+    <Folder Include="Features\AssetsInspector\Views\" />
+    <Folder Include="Features\AssetsInspector\Models\" />
   </ItemGroup>
 </Project>
