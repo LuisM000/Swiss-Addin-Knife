@@ -7,7 +7,7 @@ namespace SwissAddinKnife.Utils
 {
     public static class FileUtils
     {
-        internal static readonly string[] validImageExtensions = { "jpg", "bmp", "png" };
+        static readonly string[] validImageExtensions = { "jpg", "bmp", "png" };
 
         public static string[] GetFolderImages(string searchFolder)
         {

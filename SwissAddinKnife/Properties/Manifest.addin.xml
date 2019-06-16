@@ -34,6 +34,8 @@
             id="SwissAddinKnife.Commands.OpenGenerator" />
          <CommandItem 
             id="SwissAddinKnife.Commands.OpenImageAssetsGenerator" />
+        <CommandItem 
+            id="SwissAddinKnife.Commands.OpenAssetsAnalyzer" />
         <SeparatorItem/>
         <CommandItem 
             id="SwissAddinKnife.Commands.OpenJsonToClassGeneratorView" />
@@ -53,6 +55,10 @@
             id = "SwissAddinKnife.Commands.OpenImageAssetsGenerator"
             defaultHandler = "SwissAddinKnife.Features.AssetsGenerator.Commands.OpenImageAssetsGeneratorCommand" 
             _label = "Assets generator" />
+        <Command 
+            id = "SwissAddinKnife.Commands.OpenAssetsAnalyzer"
+            defaultHandler = "SwissAddinKnife.Features.AssetsInspector.Commands.OpenAssetsAnalyzerCommand" 
+            _label = "Assets analyzer" />
         <Command 
             id = "SwissAddinKnife.Commands.OpenJsonToClassGeneratorView"
             defaultHandler = "SwissAddinKnife.Features.JsonToClass.Commands.OpenJsonToClassGeneratorViewCommand" 
