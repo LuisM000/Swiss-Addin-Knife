@@ -27,5 +27,6 @@
     <Folder Include="Features\AssetsInspector\Commands\" />
     <Folder Include="Features\AssetsInspector\Views\" />
     <Folder Include="Features\AssetsInspector\Models\" />
+    <Folder Include="Features\AssetsInspector\Core\File\" />
   </ItemGroup>
 </Project>

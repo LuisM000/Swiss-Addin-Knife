@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using SwissAddinKnife.Features.AssetsInspector.Core.File;
 using SwissAddinKnife.Utils;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Core
@@ -16,6 +17,15 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
         public virtual string XhdpiFilePath { get; private set; }
         public virtual string XxhdpiFilePath { get; private set; }
         public virtual string XxxhdpiFilePath { get; private set; }
+
+        public override IList<FileBase> Files
+        {
+            get
+            {
+                var files = new List<string>() { StandardFilePath, LdpiFilePath, MdpiFilePath, HdpiFilePath, HdpiFilePath, XhdpiFilePath, XxhdpiFilePath, XxxhdpiFilePath };
+                return files.Where(f => !string.IsNullOrEmpty(f)).Select(f => new FileAndroid(f)).ToList<FileBase>();              
+            }
+        }
 
         public AssetAndroid(string filePath) : base(ExtractIdentifierFromFilePath(filePath))
         {

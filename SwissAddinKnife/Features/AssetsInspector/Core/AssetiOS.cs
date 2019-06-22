@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using SwissAddinKnife.Features.AssetsInspector.Core.File;
 using SwissAddinKnife.Utils;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Core
@@ -12,6 +13,15 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
         public virtual string StandardFilePath { get; private set; }
         public virtual string X2FilePath { get; private set; }
         public virtual string X3FilePath { get; private set; }
+
+        public override IList<FileBase> Files
+        {
+            get
+            {
+                var files = new List<string>() { StandardFilePath, X2FilePath, X3FilePath };
+                return files.Where(f=>!string.IsNullOrEmpty(f)).Select(f=>new FileiOS(f)).ToList<FileBase>();
+            }
+        }
 
         public AssetiOS(string filePath) : base(ExtractIdentifierFromFilePath(filePath))
         {

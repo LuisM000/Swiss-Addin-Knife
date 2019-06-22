@@ -8,6 +8,7 @@ using SwissAddinKnife.Extensions;
 using SwissAddinKnife.Features.AssetsInspector.Core;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
 using SwissAddinKnife.Features.AssetsInspector.Models;
+using SwissAddinKnife.Features.AssetsInspector.Services;
 using SwissAddinKnife.Utils;
 using Xwt;
 
@@ -17,11 +18,17 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
     {
         private Solution solution;
         private List<AssetProperties> assets;
+        IImageService imageService = new ImageService();
 
-        VBox _mainBox;
+        HPaned _mainPaned;
+        VBox _mainLeftBox;
+        VBox _mainRightBox;
 
         Label _selectProjectsLabel;
         ComboBox _selectProjectsComboBox;
+
+        Label _selectResultLabel;
+        ComboBox _selectResultComboBox;
 
         ListView _resultListView;
         ListStore _resultsStore;
@@ -29,6 +36,13 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         DataField<string> _imageFileNameField;
         DataField<string> _projectNameField;
         DataField<string> _resultField;
+
+
+        ListView _selectedAssetListView;
+        ListStore _selectedAssetStore;
+        DataField<string> _selectedAssetNameField;
+        DataField<string> _selectedAssetSizeField;
+
 
         Button _analyzeButton;
 
@@ -49,11 +63,14 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         {
             Title = "Assets analyzer";
 
-            _mainBox = new VBox()
+            _mainPaned = new HPaned()
             {
-                HeightRequest = 350,
-                WidthRequest = 500
+                HeightRequest = 600,
+                WidthRequest = 600
             };
+
+            _mainLeftBox = new VBox();
+            _mainRightBox = new VBox();
 
             _selectProjectsLabel = new Label("Select the project");
             _selectProjectsComboBox = new ComboBox();
@@ -64,6 +81,14 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             }
             _selectProjectsComboBox.SelectedIndex = 0;
 
+            _selectResultLabel = new Label("Filter by result");
+            _selectResultComboBox = new ComboBox();
+            _selectResultComboBox.Items.Add("All");
+            _selectResultComboBox.Items.Add("Not analyzed");
+            _selectResultComboBox.Items.Add("OK");
+            _selectResultComboBox.Items.Add("Failed");
+            _selectResultComboBox.SelectedIndex = 0;
+
             _assetProperties = new DataField<AssetProperties>();
             _imageFileNameField = new DataField<string>();
             _projectNameField = new DataField<string>();
@@ -72,7 +97,6 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _resultListView = new ListView
             {
                 GridLinesVisible = GridLines.Both,
-                WidthRequest = 500                
             };
             _resultListView.Columns.Add("Asset", new TextCellView(_imageFileNameField));
             _resultListView.Columns.Add("Project", new TextCellView(_projectNameField));
@@ -86,25 +110,55 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                 WidthRequest = 100,
                 HeightRequest = 40
             };
+
+
+            _selectedAssetNameField = new DataField<string>();
+            _selectedAssetSizeField = new DataField<string>();
+            _selectedAssetStore = new ListStore(_selectedAssetNameField, _selectedAssetSizeField);
+            _selectedAssetListView = new ListView
+            {
+                GridLinesVisible = GridLines.Both,
+                HeightRequest = 200
+            };
+            _selectedAssetListView.Columns.Add("Asset name", new TextCellView(_selectedAssetNameField));
+            _selectedAssetListView.Columns.Add("Size", new TextCellView(_selectedAssetSizeField));
+            _selectedAssetListView.DataSource = _selectedAssetStore;
+
+
         }
         
         void BuildGui()
-        {
-            _mainBox.PackStart(_selectProjectsLabel, expand: false);
-            _mainBox.PackStart(_selectProjectsComboBox, expand: false, marginBottom: 5);
-            _mainBox.PackStart(_resultListView,expand:true, marginBottom: 5);
-            _mainBox.PackEnd(_analyzeButton);
+        {           
+            _mainPaned.Panel1.Content = _mainLeftBox;
+            _mainPaned.Panel2.Content = _mainRightBox;
 
-            Content = _mainBox;
+            _mainLeftBox.PackStart(_selectProjectsLabel, expand: false);
+            _mainLeftBox.PackStart(_selectProjectsComboBox, expand: false, marginBottom: 5);
+            _mainLeftBox.PackStart(_selectResultLabel, expand: false);
+            _mainLeftBox.PackStart(_selectResultComboBox, expand: false, marginBottom: 5);
+            _mainLeftBox.PackStart(_resultListView,expand:true, marginBottom: 5);
+            _mainLeftBox.PackEnd(_analyzeButton);
+
+
+            _mainRightBox.PackStart(_selectedAssetListView, expand: true, marginBottom: 5);
+
+            Content = _mainPaned;
         }
 
         void AttachEvents()
         {
             _analyzeButton.Clicked += OnAnalyzeClicked;
             _selectProjectsComboBox.SelectionChanged += OnSelectProjectsChanged;
+            _selectResultComboBox.SelectionChanged += OnResultChanged;
+            _resultListView.SelectionChanged += OnResultListViewSelectionChanged;
         }
 
+        
         private void OnSelectProjectsChanged(object sender, EventArgs e)
+        {
+            DrawAssets();
+        }
+        private void OnResultChanged(object sender, EventArgs e)
         {
             DrawAssets();
         }
@@ -113,6 +167,13 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         {
             AnalizeResources();
         }
+
+        private void OnResultListViewSelectionChanged(object sender, EventArgs e)
+        {
+            var asset = _resultsStore.GetValue(_resultListView.SelectedRow, _assetProperties);
+            DrawSelectedAsset(asset);
+        }
+
 
         private void FillAllAssets()
         {
@@ -160,10 +221,17 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         private void DrawAssets()
         {
             var selectedProject = _selectProjectsComboBox.SelectedItem;
+            var selectedResult = _selectResultComboBox.SelectedText;
             _resultsStore.Clear();
             foreach (AssetProperties asset in this.assets)
             {
                 if (selectedProject is Project project && asset.Project != project)
+                    continue;
+                if (selectedResult == "Not analyzed" && asset.Result.Value != null)
+                    continue;
+                if (selectedResult == "OK" && (asset.Result.Value!=null && asset.Result.IsError || asset.Result.Value ==null))
+                    continue;
+                if (selectedResult == "Failed" && (asset.Result.Value != null && asset.Result.IsSuccess || asset.Result.Value == null))
                     continue;
 
                 var row = _resultsStore.AddRow();
@@ -171,9 +239,9 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                 _resultsStore.SetValue(row, _imageFileNameField, asset.Asset.Identifier);
                 _resultsStore.SetValue(row, _projectNameField, asset.Project.Name);
                 if(asset.Result.Value == null)
-                    _resultsStore.SetValue(row, _resultField, "not analyzed");
+                    _resultsStore.SetValue(row, _resultField, "Not analyzed");
                 else
-                    _resultsStore.SetValue(row, _resultField, asset.Result.IsSuccess.ToString());
+                    _resultsStore.SetValue(row, _resultField, asset.Result.IsSuccess ? "OK" : "Failed");                
             }
         }
 
@@ -181,12 +249,23 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         {
             for (int i = 0; i < _resultsStore.RowCount; i++)
             {
-                var asset = _resultsStore.GetValue(i, _assetProperties);
+                var asset = _resultsStore.GetValue(i, _assetProperties);                
                 asset.Result = asset.Asset.Analize();
-                _resultsStore.SetValue(i, _resultField, asset.Result.IsSuccess.ToString());
+                _resultsStore.SetValue(i, _resultField, asset.Result.IsSuccess ? "OK" : "Failed");
             }
         }
 
+        private void DrawSelectedAsset(AssetProperties assetProperties)
+        {
+            _selectedAssetStore.Clear();
+            foreach (var file in assetProperties.Asset.Files)
+            {
+                var row = _selectedAssetStore.AddRow();
+                _selectedAssetStore.SetValue(row, _selectedAssetNameField, file.ReducedPath);
+                var imageSize = imageService.GetImageSize(file.Path);
+                _selectedAssetStore.SetValue(row, _selectedAssetSizeField, imageSize.Width + "x" + imageSize.Height);
+            }
+        }
 
         private IEnumerable<string> GetAndroidImageResources(Project project)
         {
@@ -200,5 +279,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
 
             return drawableImages.Union(ldpiImages).Union(mdpiImages).Union(hdpiImages).Union(xhdpiImages).Union(xxhdpiImages).Union(xxxhdpiImages);
         }
+
+
     }
 }

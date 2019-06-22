@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using SwissAddinKnife.Features.AssetsInspector.Core.File;
 using SwissAddinKnife.Utils;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Core
@@ -8,6 +9,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
     public abstract class AssetBase
     {
         public string Identifier { get; }
+
+        public abstract IList<FileBase> Files { get; }
 
         protected AssetBase(string identifier)
         {
