@@ -5,6 +5,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.Android
 {
     public class AndroidContainsMdpiFileCondition : AssetCondition
     {
+        public new static string Description => "Contains mdpi file asset";
+
         private readonly AssetAndroid assetAndroid;
 
         public AndroidContainsMdpiFileCondition(AssetAndroid assetAndroid)
@@ -14,7 +16,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.Android
 
         public override IList<Condition> Verify()
         {
-            Condition conditionMdpiFile = new Condition("Contains mdpi file asset", !string.IsNullOrEmpty(assetAndroid.MdpiFilePath));
+            Condition conditionMdpiFile = new Condition(Description, !string.IsNullOrEmpty(assetAndroid.MdpiFilePath));
 
             return new List<Condition>() { conditionMdpiFile };
         }

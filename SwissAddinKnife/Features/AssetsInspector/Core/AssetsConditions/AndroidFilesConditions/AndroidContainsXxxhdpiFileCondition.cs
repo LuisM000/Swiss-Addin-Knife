@@ -5,6 +5,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.Android
 {
     public class AndroidContainsXxxhdpiFileCondition : AssetCondition
     {
+        public new static string Description => "Contains xxxhdpi file asset";
+
         private readonly AssetAndroid assetAndroid;
 
         public AndroidContainsXxxhdpiFileCondition(AssetAndroid assetAndroid)
@@ -14,7 +16,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.Android
 
         public override IList<Condition> Verify()
         {
-            Condition conditionXxxhdpiFile = new Condition("Contains xxxhdpi file asset", !string.IsNullOrEmpty(assetAndroid.XxxhdpiFilePath));
+            Condition conditionXxxhdpiFile = new Condition(Description, !string.IsNullOrEmpty(assetAndroid.XxxhdpiFilePath));
 
             return new List<Condition>() { conditionXxxhdpiFile };
         }

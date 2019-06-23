@@ -5,6 +5,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFile
 {
     public class IOSContainsStandardFileCondition : AssetCondition
     {
+        public new static string Description => "Contains standard file asset (x1)";
+
         private readonly AssetiOS assetiOS;
 
         public IOSContainsStandardFileCondition(AssetiOS assetiOS)
@@ -14,7 +16,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFile
 
         public override IList<Condition> Verify()
         {
-            Condition conditionStandardFile = new Condition("Contains standard file asset (x1)", !string.IsNullOrEmpty(assetiOS.StandardFilePath));
+            Condition conditionStandardFile = new Condition(Description, !string.IsNullOrEmpty(assetiOS.StandardFilePath));
            
             return new List<Condition>() { conditionStandardFile };
         }

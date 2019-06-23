@@ -23,6 +23,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         private List<AssetProperties> assets;
         IImageService imageService = new ImageService();
 
+        Notebook _mainNotebook;
         HPaned _mainPaned;
         VBox _mainLeftBox;
         VBox _mainRightBox;
@@ -51,10 +52,28 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         ListStore _selectedAssetResultStore;
         DataField<Image> _selectedAssetResultIconField;
         DataField<string> _selectedAssetResultDescriptionField;
-
-
+        
         Button _analyzeButton;
 
+
+        VBox _mainOptionsBox;
+        HBox _analizeOptionsBox;
+        VBox _iosAnalizeOptionsBox;
+        Label _iosAnalizeOptionsLabel;
+        VBox _androidAnalizeOptionsBox;
+        Label _androidAnalizeOptionsLabel;
+
+        CheckBox _iosStandardFileConditionCheckbox;
+        CheckBox _iosX2FileConditionCheckbox;
+        CheckBox _iosX3FileConditionCheckbox;
+
+        CheckBox _androidStandardFileConditionCheckbox;
+        CheckBox _androidLdpiFileConditionCheckbox;
+        CheckBox _androidMdpiFileConditionCheckbox;
+        CheckBox _androidHdpiFileConditionCheckbox;
+        CheckBox _androidXhdpiFileConditionCheckbox;
+        CheckBox _androidXxhdpiFileConditionCheckbox;
+        CheckBox _androidXxxhdpiFileConditionCheckbox;
 
         public AssetsAnalyzerDialog(Solution solution)
         {
@@ -72,6 +91,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         {
             Title = "Assets analyzer";
 
+            _mainNotebook = new Notebook();
             _mainPaned = new HPaned()
             {
                 HeightRequest = 600,
@@ -147,26 +167,79 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _selectedAssetResultListView.Columns.Add(string.Empty, new ImageCellView(_selectedAssetResultIconField));
             _selectedAssetResultListView.Columns.Add("Description", new TextCellView(_selectedAssetResultDescriptionField));
             _selectedAssetResultListView.DataSource = _selectedAssetResultStore;
+
+            
+            _mainOptionsBox = new VBox();
+            _analizeOptionsBox = new HBox();
+            _iosAnalizeOptionsBox = new VBox();
+            _iosAnalizeOptionsLabel = new Label("iOS conditions");
+            _androidAnalizeOptionsBox = new VBox();
+            _androidAnalizeOptionsLabel = new Label("Android conditions");
+
+
+            _iosStandardFileConditionCheckbox = new CheckBox(IOSContainsStandardFileCondition.Description);
+            _iosX2FileConditionCheckbox = new CheckBox(IOSContainsX2FileCondition.Description);
+            _iosX3FileConditionCheckbox = new CheckBox(IOSContainsX3FileCondition.Description);
+            _iosStandardFileConditionCheckbox.Active = true;
+            _iosX2FileConditionCheckbox.Active = true;
+            _iosX3FileConditionCheckbox.Active = true;
+
+
+            _androidStandardFileConditionCheckbox = new CheckBox(AndroidContainsStandardFileCondition.Description);
+            _androidLdpiFileConditionCheckbox = new CheckBox(AndroidContainsLdpiFileCondition.Description);
+            _androidMdpiFileConditionCheckbox = new CheckBox(AndroidContainsMdpiFileCondition.Description);
+            _androidHdpiFileConditionCheckbox = new CheckBox(AndroidContainsHdpiFileCondition.Description);
+            _androidXhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXhdpiFileCondition.Description);
+            _androidXxhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXxhdpiFileCondition.Description);
+            _androidXxxhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXxxhdpiFileCondition.Description);
+            _androidStandardFileConditionCheckbox.Active = false;
+            _androidLdpiFileConditionCheckbox.Active = true;
+            _androidMdpiFileConditionCheckbox.Active = true;
+            _androidHdpiFileConditionCheckbox.Active = true;
+            _androidXhdpiFileConditionCheckbox.Active = true;
+            _androidXxhdpiFileConditionCheckbox.Active = true;
+            _androidXxxhdpiFileConditionCheckbox.Active = true;
+
         }
-        
+
         void BuildGui()
-        {           
+        {
+            _mainNotebook.Add(_mainPaned, " Main ");
+            _mainNotebook.Add(_mainOptionsBox, " Settings ");
+
             _mainPaned.Panel1.Content = _mainLeftBox;
             _mainPaned.Panel2.Content = _mainRightBox;
 
-            _mainLeftBox.PackStart(_selectProjectsLabel, expand: false);
+            _mainLeftBox.PackStart(_selectProjectsLabel, expand: false, marginTop: 10);
             _mainLeftBox.PackStart(_selectProjectsComboBox, expand: false, marginBottom: 5);
             _mainLeftBox.PackStart(_selectResultLabel, expand: false);
             _mainLeftBox.PackStart(_selectResultComboBox, expand: false, marginBottom: 5);
             _mainLeftBox.PackStart(_resultListView,expand:true, marginBottom: 5);
             _mainLeftBox.PackEnd(_analyzeButton);
 
-
             _mainRightBox.PackStart(_selectedAssetResultListView, expand: true, marginBottom: 5);
             _mainRightBox.PackStart(_selectedAssetListView, expand: true, marginBottom: 5);
 
 
-            Content = _mainPaned;
+            _mainOptionsBox.PackStart(_analizeOptionsBox);
+            _analizeOptionsBox.PackStart(_iosAnalizeOptionsBox, hpos: WidgetPlacement.Center, marginTop: 10);
+            _analizeOptionsBox.PackEnd(_androidAnalizeOptionsBox, hpos: WidgetPlacement.Center, marginTop: 10);
+
+            _iosAnalizeOptionsBox.PackStart(_iosAnalizeOptionsLabel, hpos: WidgetPlacement.Center);
+            _iosAnalizeOptionsBox.PackStart(_iosStandardFileConditionCheckbox, marginBottom: -8);
+            _iosAnalizeOptionsBox.PackStart(_iosX2FileConditionCheckbox, marginBottom: -8);
+            _iosAnalizeOptionsBox.PackStart(_iosX3FileConditionCheckbox, marginBottom: -8);
+
+            _androidAnalizeOptionsBox.PackStart(_androidAnalizeOptionsLabel, hpos: WidgetPlacement.Center);
+            _androidAnalizeOptionsBox.PackStart(_androidStandardFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidLdpiFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidMdpiFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidHdpiFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidXhdpiFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidXxhdpiFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidXxxhdpiFileConditionCheckbox, marginBottom: -8);
+
+            Content = _mainNotebook;
         }
 
         void AttachEvents()
@@ -324,13 +397,39 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             List<AssetCondition> assetConditions = new List<AssetCondition>();
             if (assetProperties.Asset is AssetAndroid assetAndroid)
             {
-                assetConditions.Add(new AllFilesAndroidCondition(assetAndroid));
-                assetConditions.Add(new SizesFilesAndroidCondition(assetAndroid));
+                if (_androidStandardFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsStandardFileCondition(assetAndroid));
+
+                if (_androidLdpiFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsLdpiFileCondition(assetAndroid));
+
+                if (_androidMdpiFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsMdpiFileCondition(assetAndroid));
+
+                if (_androidHdpiFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsHdpiFileCondition(assetAndroid));
+
+                if (_androidXhdpiFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsXhdpiFileCondition(assetAndroid));
+
+                if (_androidXxhdpiFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsXxhdpiFileCondition(assetAndroid));
+
+                if (_androidXxxhdpiFileConditionCheckbox.Active)
+                    assetConditions.Add(new AndroidContainsXxxhdpiFileCondition(assetAndroid));
+
             }
             else if (assetProperties.Asset is AssetiOS assetiOS)
             {
-                assetConditions.Add(new AllFilesiOSCondition(assetiOS));
-                assetConditions.Add(new SizesFilesiOSCondition(assetiOS));
+                if (_iosStandardFileConditionCheckbox.Active)
+                    assetConditions.Add(new IOSContainsStandardFileCondition(assetiOS));
+
+                if (_iosX2FileConditionCheckbox.Active)
+                    assetConditions.Add(new IOSContainsX2FileCondition(assetiOS));
+
+                if (_iosX3FileConditionCheckbox.Active)
+                    assetConditions.Add(new IOSContainsX3FileCondition(assetiOS));
+
             }
 
             return assetConditions;

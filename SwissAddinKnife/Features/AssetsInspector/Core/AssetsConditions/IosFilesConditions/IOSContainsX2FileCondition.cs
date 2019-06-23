@@ -5,6 +5,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFile
 {
     public class IOSContainsX2FileCondition: AssetCondition
     {
+        public new static string Description => "Contains @2x file asset";
+
         private readonly AssetiOS assetiOS;
 
         public IOSContainsX2FileCondition(AssetiOS assetiOS)
@@ -14,7 +16,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFile
 
         public override IList<Condition> Verify()
         {
-            Condition conditionX2File = new Condition("Contains @2x file asset (x2)", !string.IsNullOrEmpty(assetiOS.X2FilePath));
+            Condition conditionX2File = new Condition(Description, !string.IsNullOrEmpty(assetiOS.X2FilePath));
            
             return new List<Condition>() { conditionX2File };
         }

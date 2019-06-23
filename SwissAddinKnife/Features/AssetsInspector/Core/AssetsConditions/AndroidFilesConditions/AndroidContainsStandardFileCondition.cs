@@ -5,6 +5,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.Android
 {
     public class AndroidContainsStandardFileCondition : AssetCondition
     {
+        public new static string Description => "Contains standard (drawable) file asset (x1)";
+
         private readonly AssetAndroid assetAndroid;
 
         public AndroidContainsStandardFileCondition(AssetAndroid assetAndroid)
@@ -14,7 +16,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.Android
 
         public override IList<Condition> Verify()
         {
-            Condition conditionStandardFile = new Condition("Contains standard file asset (x1)", !string.IsNullOrEmpty(assetAndroid.StandardFilePath));
+            Condition conditionStandardFile = new Condition(Description, !string.IsNullOrEmpty(assetAndroid.StandardFilePath));
            
             return new List<Condition>() { conditionStandardFile };
         }
