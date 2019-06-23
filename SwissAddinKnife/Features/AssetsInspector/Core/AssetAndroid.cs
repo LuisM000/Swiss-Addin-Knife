@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
-using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.AndroidFilesConditions;
 using SwissAddinKnife.Features.AssetsInspector.Core.File;
-using SwissAddinKnife.Utils;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Core
 {
@@ -50,19 +47,6 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
             this.CheckAndSetFilePath(filePath);
 
             return true;
-        }
-
-        public override Result<IList<Condition>> Analize()
-        {
-            var assetConditions = new List<AssetCondition>()
-            {
-                new AllFilesAndroidCondition(this),
-                new SizesFilesAndroidCondition(this)
-            };
-
-            IList<Condition> conditions = assetConditions.SelectMany(a => a.Verify()).ToList();
-
-            return new Result<IList<Condition>>(conditions.All(a => a.IsFulfilled), conditions);
         }
 
         private void CheckAndSetFilePath(string filePath)

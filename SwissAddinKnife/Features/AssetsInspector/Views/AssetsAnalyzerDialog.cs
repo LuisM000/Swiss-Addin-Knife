@@ -11,6 +11,9 @@ using SwissAddinKnife.Features.AssetsInspector.Models;
 using SwissAddinKnife.Features.AssetsInspector.Services;
 using SwissAddinKnife.Utils;
 using Xwt;
+using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.AndroidFilesConditions;
+using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFilesConditions;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Views
 {
@@ -270,8 +273,9 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         {
             for (int i = 0; i < _resultsStore.RowCount; i++)
             {
-                var asset = _resultsStore.GetValue(i, _assetProperties);                
-                asset.Result = asset.Asset.Analize();
+                var asset = _resultsStore.GetValue(i, _assetProperties);
+                var assetConditions = this.GetAssetConditions(asset);
+                asset.Result = asset.Asset.Analize(assetConditions);
                 _resultsStore.SetValue(i, _resultField, asset.Result.IsSuccess ? "OK" : "Failed");
             }
         }
@@ -315,6 +319,21 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             return drawableImages.Union(ldpiImages).Union(mdpiImages).Union(hdpiImages).Union(xhdpiImages).Union(xxhdpiImages).Union(xxxhdpiImages);
         }
 
+        private IList<AssetCondition> GetAssetConditions(AssetProperties assetProperties)
+        {
+            List<AssetCondition> assetConditions = new List<AssetCondition>();
+            if (assetProperties.Asset is AssetAndroid assetAndroid)
+            {
+                assetConditions.Add(new AllFilesAndroidCondition(assetAndroid));
+                assetConditions.Add(new SizesFilesAndroidCondition(assetAndroid));
+            }
+            else if (assetProperties.Asset is AssetiOS assetiOS)
+            {
+                assetConditions.Add(new AllFilesiOSCondition(assetiOS));
+                assetConditions.Add(new SizesFilesiOSCondition(assetiOS));
+            }
 
+            return assetConditions;
+        }
     }
 }

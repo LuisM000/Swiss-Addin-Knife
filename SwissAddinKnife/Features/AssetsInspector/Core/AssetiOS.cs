@@ -49,20 +49,6 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
             return true;
         }
 
-        
-        public override Result<IList<Condition>> Analize()
-        {
-            var assetConditions = new List<AssetCondition>()
-            {
-                new AllFilesiOSCondition(this),
-                new SizesFilesiOSCondition(this)
-            };
-
-            IList<Condition> conditions = assetConditions.SelectMany(a => a.Verify()).ToList();
-
-            return new Result<IList<Condition>>(conditions.All(a => a.IsFulfilled), conditions);
-        }
-
         private void CheckAndSetFilePath(string filePath)
         {
             var fileName = Path.GetFileNameWithoutExtension(filePath);
