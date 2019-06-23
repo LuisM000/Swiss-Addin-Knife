@@ -49,14 +49,26 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AssetsInspector\" />
+    <Folder Include="AssetsInspector\AndroidFilesConditionsTest\" />
+    <Folder Include="AssetsInspector\IOSFilesConditionsTest\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetsInspector\AssetiOSShould.cs" />
-    <Compile Include="AssetsInspector\AllFilesiOSConditionShould.cs" />
     <Compile Include="AssetsInspector\SizesFilesiOSConditionShould.cs" />
     <Compile Include="AssetsInspector\AssetAndroidShould.cs" />
-    <Compile Include="AssetsInspector\AllFilesAndroidConditionShould.cs" />
     <Compile Include="AssetsInspector\SizesFilesAndroidConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsStandardFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsLdpiFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsMdpiFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsHdpiFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsXhdpiFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsXxhdpiFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AndroidContainsXxxhdpiFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\AndroidFilesConditionsTest\AllFilesAndroidConditionShould.cs" />
+    <Compile Include="AssetsInspector\IOSFilesConditionsTest\AllFilesiOSConditionShould.cs" />
+    <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsStandardFileConditionShould.cs" />
+    <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsX2FileConditionShould.cs" />
+    <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsX3FileConditionShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SwissAddinKnife\SwissAddinKnife.csproj">

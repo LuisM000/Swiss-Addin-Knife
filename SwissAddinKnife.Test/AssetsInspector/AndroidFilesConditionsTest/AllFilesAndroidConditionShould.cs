@@ -4,8 +4,9 @@ using Moq;
 using NUnit.Framework;
 using SwissAddinKnife.Features.AssetsInspector.Core;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.AndroidFilesConditions;
 
-namespace SwissAddinKnife.Test.AssetsInspector
+namespace SwissAddinKnife.Test.AssetsInspector.AndroidFilesConditionsTest
 {
     [TestFixture]
     public class AllFilesAndroidConditionShould

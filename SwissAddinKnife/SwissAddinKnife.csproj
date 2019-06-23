@@ -29,6 +29,8 @@
     <Folder Include="Features\AssetsInspector\Models\" />
     <Folder Include="Features\AssetsInspector\Core\File\" />
     <Folder Include="Resources\" />
+    <Folder Include="Features\AssetsInspector\Core\AssetsConditions\AndroidFilesConditions\" />
+    <Folder Include="Features\AssetsInspector\Core\AssetsConditions\IosFilesConditions\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\cancel.png" />

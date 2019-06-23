@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions
+namespace SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFilesConditions
 {
     public class AllFilesiOSCondition : AssetCondition
     {
