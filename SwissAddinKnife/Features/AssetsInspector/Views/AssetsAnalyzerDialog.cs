@@ -6,7 +6,7 @@ using MonoDevelop.Ide.Gui;
 using MonoDevelop.Projects;
 using SwissAddinKnife.Extensions;
 using SwissAddinKnife.Features.AssetsInspector.Core;
-using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
+using Xwt.Drawing;
 using SwissAddinKnife.Features.AssetsInspector.Models;
 using SwissAddinKnife.Features.AssetsInspector.Services;
 using SwissAddinKnife.Utils;
@@ -40,8 +40,14 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
 
         ListView _selectedAssetListView;
         ListStore _selectedAssetStore;
+        DataField<Image> _selectedAssetImageField;
         DataField<string> _selectedAssetNameField;
         DataField<string> _selectedAssetSizeField;
+
+        ListView _selectedAssetResultListView;
+        ListStore _selectedAssetResultStore;
+        DataField<Image> _selectedAssetResultIconField;
+        DataField<string> _selectedAssetResultDescriptionField;
 
 
         Button _analyzeButton;
@@ -112,19 +118,32 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             };
 
 
+            _selectedAssetImageField = new DataField<Image>();
             _selectedAssetNameField = new DataField<string>();
             _selectedAssetSizeField = new DataField<string>();
-            _selectedAssetStore = new ListStore(_selectedAssetNameField, _selectedAssetSizeField);
+            _selectedAssetStore = new ListStore(_selectedAssetImageField, _selectedAssetNameField, _selectedAssetSizeField);
             _selectedAssetListView = new ListView
             {
                 GridLinesVisible = GridLines.Both,
                 HeightRequest = 200
             };
+            _selectedAssetListView.Columns.Add(string.Empty, new ImageCellView(_selectedAssetImageField));
             _selectedAssetListView.Columns.Add("Asset name", new TextCellView(_selectedAssetNameField));
             _selectedAssetListView.Columns.Add("Size", new TextCellView(_selectedAssetSizeField));
             _selectedAssetListView.DataSource = _selectedAssetStore;
 
 
+            _selectedAssetResultIconField = new DataField<Image>();
+            _selectedAssetResultDescriptionField = new DataField<string>();
+            _selectedAssetResultStore = new ListStore(_selectedAssetResultIconField, _selectedAssetResultDescriptionField);
+            _selectedAssetResultListView = new ListView
+            {
+                GridLinesVisible = GridLines.Both,
+                HeightRequest = 200
+            };
+            _selectedAssetResultListView.Columns.Add(string.Empty, new ImageCellView(_selectedAssetResultIconField));
+            _selectedAssetResultListView.Columns.Add("Description", new TextCellView(_selectedAssetResultDescriptionField));
+            _selectedAssetResultListView.DataSource = _selectedAssetResultStore;
         }
         
         void BuildGui()
@@ -140,7 +159,9 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _mainLeftBox.PackEnd(_analyzeButton);
 
 
+            _mainRightBox.PackStart(_selectedAssetResultListView, expand: true, marginBottom: 5);
             _mainRightBox.PackStart(_selectedAssetListView, expand: true, marginBottom: 5);
+
 
             Content = _mainPaned;
         }
@@ -264,6 +285,20 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                 _selectedAssetStore.SetValue(row, _selectedAssetNameField, file.ReducedPath);
                 var imageSize = imageService.GetImageSize(file.Path);
                 _selectedAssetStore.SetValue(row, _selectedAssetSizeField, imageSize.Width + "x" + imageSize.Height);
+                _selectedAssetStore.SetValue(row, _selectedAssetImageField, Image.FromFile(file.Path).WithBoxSize(30, 30));
+            }
+
+            _selectedAssetResultStore.Clear();
+            if (assetProperties.Result.Value == null)
+                return;
+            foreach (var condition in assetProperties.Result.Value)
+            {
+                var row = _selectedAssetResultStore.AddRow();
+                Image resultImage = condition.IsFulfilled ? Image.FromResource("SwissAddinKnife.Resources.success.png") :
+                                                            Image.FromResource("SwissAddinKnife.Resources.unsuccess.png");
+
+                _selectedAssetResultStore.SetValue(row, _selectedAssetResultIconField, resultImage.WithBoxSize(15));
+                _selectedAssetResultStore.SetValue(row, _selectedAssetResultDescriptionField, condition.Description);
             }
         }
 

@@ -28,5 +28,18 @@
     <Folder Include="Features\AssetsInspector\Views\" />
     <Folder Include="Features\AssetsInspector\Models\" />
     <Folder Include="Features\AssetsInspector\Core\File\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\cancel.png" />
+    <None Remove="Resources\checked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\unsuccess.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\success.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
