@@ -34,14 +34,15 @@ namespace SwissAddinKnife.Test.AssetsInspector
             imageService.Setup(c => c.GetImageSize("xxhdpi")).Returns(new Size(36, 12));
             imageService.Setup(c => c.GetImageSize("xxxhdpi")).Returns(new Size(48, 16));
 
-            SizesFilesAndroidCondition sizesFilesCondition = new SizesFilesAndroidCondition(assetAndroid.Object, imageService.Object);
+            SizesFilesAndroidCondition sizesFilesCondition = new SizesFilesAndroidCondition(assetAndroid.Object, 0, imageService.Object);
 
             Assert.IsTrue(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
 
 
-        [Test]
-        public void ReturnsTrueIfAllAssetsContainsCorrectResolutionsWithOnePixelOfMarginExceptMdpi()
+        [TestCase(1)]
+        [TestCase(3)]
+        public void ReturnsTrueIfAllAssetsContainsCorrectResolutionsWithSpecifiedPixelsOfMarginExceptMdpi(int margin)
         {
             Mock<AssetAndroid> assetAndroid = new Mock<AssetAndroid>("dummy");
             assetAndroid.SetupGet(a => a.StandardFilePath).Returns("dummy");
@@ -55,21 +56,22 @@ namespace SwissAddinKnife.Test.AssetsInspector
 
             Mock<IImageService> imageService = new Mock<IImageService>();
             imageService.Setup(c => c.GetImageSize("dummy")).Returns(new Size(12, 4));
-            imageService.Setup(c => c.GetImageSize("ldpi")).Returns(new Size(9 + 1, 3 + 1));
+            imageService.Setup(c => c.GetImageSize("ldpi")).Returns(new Size(9 + margin, 3 + margin));
             imageService.Setup(c => c.GetImageSize("mdpi")).Returns(new Size(12, 4));
-            imageService.Setup(c => c.GetImageSize("hdpi")).Returns(new Size(18 + 1, 6 + 1));
-            imageService.Setup(c => c.GetImageSize("xhdpi")).Returns(new Size(24 + 1, 8 + 1));
-            imageService.Setup(c => c.GetImageSize("xxhdpi")).Returns(new Size(36 + 1, 12 + 1));
-            imageService.Setup(c => c.GetImageSize("xxxhdpi")).Returns(new Size(48 + 1, 16 + 1));
+            imageService.Setup(c => c.GetImageSize("hdpi")).Returns(new Size(18 + margin, 6 + margin));
+            imageService.Setup(c => c.GetImageSize("xhdpi")).Returns(new Size(24 + margin, 8 + margin));
+            imageService.Setup(c => c.GetImageSize("xxhdpi")).Returns(new Size(36 + margin, 12 + margin));
+            imageService.Setup(c => c.GetImageSize("xxxhdpi")).Returns(new Size(48 + margin, 16 + margin));
 
-            SizesFilesAndroidCondition sizesFilesCondition = new SizesFilesAndroidCondition(assetAndroid.Object, imageService.Object);
+            SizesFilesAndroidCondition sizesFilesCondition = new SizesFilesAndroidCondition(assetAndroid.Object, margin, imageService.Object);
 
             Assert.IsTrue(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
 
 
-        [Test]
-        public void ReturnsFalseIfAllAssetsContainsCorrectResolutionsWithOnePixelOfMarginIncludeMdpi()
+        [TestCase(1)]
+        [TestCase(3)]
+        public void ReturnsFalseIfAllAssetsContainsCorrectResolutionsWithSpecifiedPixelsOfMarginIncludeMdpi(int margin)
         {
             Mock<AssetAndroid> assetAndroid = new Mock<AssetAndroid>("dummy");
             assetAndroid.SetupGet(a => a.StandardFilePath).Returns("dummy");
@@ -83,18 +85,18 @@ namespace SwissAddinKnife.Test.AssetsInspector
 
             Mock<IImageService> imageService = new Mock<IImageService>();
             imageService.Setup(c => c.GetImageSize("dummy")).Returns(new Size(12, 4));
-            imageService.Setup(c => c.GetImageSize("ldpi")).Returns(new Size(9 + 1, 3 + 1));
-            imageService.Setup(c => c.GetImageSize("mdpi")).Returns(new Size(12 + 1, 4 + 1));
-            imageService.Setup(c => c.GetImageSize("hdpi")).Returns(new Size(18 + 1, 6 + 1));
-            imageService.Setup(c => c.GetImageSize("xhdpi")).Returns(new Size(24 + 1, 8 + 1));
-            imageService.Setup(c => c.GetImageSize("xxhdpi")).Returns(new Size(36 + 1, 12 + 1));
-            imageService.Setup(c => c.GetImageSize("xxxhdpi")).Returns(new Size(48 + 1, 16 + 1));
+            imageService.Setup(c => c.GetImageSize("ldpi")).Returns(new Size(9 + margin, 3 + margin));
+            imageService.Setup(c => c.GetImageSize("mdpi")).Returns(new Size(12 + margin, 4 + margin));
+            imageService.Setup(c => c.GetImageSize("hdpi")).Returns(new Size(18 + margin, 6 + margin));
+            imageService.Setup(c => c.GetImageSize("xhdpi")).Returns(new Size(24 + margin, 8 + margin));
+            imageService.Setup(c => c.GetImageSize("xxhdpi")).Returns(new Size(36 + margin, 12 + margin));
+            imageService.Setup(c => c.GetImageSize("xxxhdpi")).Returns(new Size(48 + margin, 16 + margin));
 
-            SizesFilesAndroidCondition sizesFilesCondition = new SizesFilesAndroidCondition(assetAndroid.Object, imageService.Object);
+            SizesFilesAndroidCondition sizesFilesCondition = new SizesFilesAndroidCondition(assetAndroid.Object, 1, imageService.Object);
 
             Assert.IsFalse(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
 
-
+      
     }
 }

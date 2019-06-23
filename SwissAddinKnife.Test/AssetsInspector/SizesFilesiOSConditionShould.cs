@@ -26,13 +26,14 @@ namespace SwissAddinKnife.Test.AssetsInspector
             imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(10, 16));
             imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(15, 24));
 
-            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, imageService.Object);
+            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, 0, imageService.Object);
 
             Assert.IsTrue(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
 
-        [Test]
-        public void ReturnsTrueIfX2AssetIsDoubleAndX3IsTripleWithOnePixelOfMargin()
+        [TestCase(1)]
+        [TestCase(3)]
+        public void ReturnsTrueIfX2AssetIsDoubleAndX3IsTripleWithSpecifiedPixelsOfMargin(int margin)
         {
             Mock<AssetiOS> assetiOS = new Mock<AssetiOS>("dummy");
             assetiOS.SetupGet(a => a.StandardFilePath).Returns("dummy");
@@ -42,10 +43,10 @@ namespace SwissAddinKnife.Test.AssetsInspector
 
             Mock<IImageService> imageService = new Mock<IImageService>();
             imageService.Setup(c => c.GetImageSize("dummy")).Returns(new Size(5, 8));
-            imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(10 + 1, 16 + 1));
-            imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(15 + 1, 24 + 1));
+            imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(10 + margin, 16 + margin));
+            imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(15 + margin, 24 + margin));
 
-            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, imageService.Object);
+            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, margin, imageService.Object);
 
             Assert.IsTrue(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }
@@ -69,7 +70,7 @@ namespace SwissAddinKnife.Test.AssetsInspector
             imageService.Setup(c => c.GetImageSize("dummyX2")).Returns(new Size(widthX2, heightX2));
             imageService.Setup(c => c.GetImageSize("dummyX3")).Returns(new Size(widthX3, heightX3));
 
-            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, imageService.Object);
+            SizesFilesiOSCondition sizesFilesCondition = new SizesFilesiOSCondition(assetiOS.Object, 0, imageService.Object);
 
             Assert.IsFalse(sizesFilesCondition.Verify().All(c => c.IsFulfilled));
         }

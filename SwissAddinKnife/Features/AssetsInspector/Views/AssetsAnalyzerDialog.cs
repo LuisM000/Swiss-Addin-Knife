@@ -66,6 +66,10 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         CheckBox _iosStandardFileConditionCheckbox;
         CheckBox _iosX2FileConditionCheckbox;
         CheckBox _iosX3FileConditionCheckbox;
+        CheckBox _iosResolutionFileConditionCheckbox;
+        HBox _iosResolutionMarginBox;
+        Label _iosResolutionMarginLabel;
+        TextEntry _iosResolutionMarginTextEntry;
 
         CheckBox _androidStandardFileConditionCheckbox;
         CheckBox _androidLdpiFileConditionCheckbox;
@@ -74,6 +78,10 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         CheckBox _androidXhdpiFileConditionCheckbox;
         CheckBox _androidXxhdpiFileConditionCheckbox;
         CheckBox _androidXxxhdpiFileConditionCheckbox;
+        CheckBox _androidResolutionFileConditionCheckbox;
+        HBox _androidResolutionMarginBox;
+        Label _androidResolutionMarginLabel;
+        TextEntry _androidResolutionMarginTextEntry;
 
         public AssetsAnalyzerDialog(Solution solution)
         {
@@ -177,13 +185,23 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidAnalizeOptionsLabel = new Label("Android conditions");
 
 
+            _iosResolutionMarginBox = new HBox();
+            _iosResolutionMarginLabel = new Label("Margin (px) when checking resolution");
+
             _iosStandardFileConditionCheckbox = new CheckBox(IOSContainsStandardFileCondition.Description);
             _iosX2FileConditionCheckbox = new CheckBox(IOSContainsX2FileCondition.Description);
             _iosX3FileConditionCheckbox = new CheckBox(IOSContainsX3FileCondition.Description);
+            _iosResolutionFileConditionCheckbox = new CheckBox(SizesFilesiOSCondition.Description);
+            _iosResolutionMarginTextEntry = new TextEntry() { WidthRequest = 35 };
             _iosStandardFileConditionCheckbox.Active = true;
             _iosX2FileConditionCheckbox.Active = true;
             _iosX3FileConditionCheckbox.Active = true;
+            _iosResolutionFileConditionCheckbox.Active = true;
+            _iosResolutionMarginTextEntry.Text = "2";
 
+
+            _androidResolutionMarginBox = new HBox();
+            _androidResolutionMarginLabel = new Label("Margin (px) when checking resolution");
 
             _androidStandardFileConditionCheckbox = new CheckBox(AndroidContainsStandardFileCondition.Description);
             _androidLdpiFileConditionCheckbox = new CheckBox(AndroidContainsLdpiFileCondition.Description);
@@ -192,6 +210,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidXhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXhdpiFileCondition.Description);
             _androidXxhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXxhdpiFileCondition.Description);
             _androidXxxhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXxxhdpiFileCondition.Description);
+            _androidResolutionFileConditionCheckbox = new CheckBox(SizesFilesAndroidCondition.Description);
+            _androidResolutionMarginTextEntry = new TextEntry() { WidthRequest = 35 };
             _androidStandardFileConditionCheckbox.Active = false;
             _androidLdpiFileConditionCheckbox.Active = true;
             _androidMdpiFileConditionCheckbox.Active = true;
@@ -199,7 +219,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidXhdpiFileConditionCheckbox.Active = true;
             _androidXxhdpiFileConditionCheckbox.Active = true;
             _androidXxxhdpiFileConditionCheckbox.Active = true;
-
+            _androidResolutionFileConditionCheckbox.Active = true;
+            _androidResolutionMarginTextEntry.Text = "2";
         }
 
         void BuildGui()
@@ -226,11 +247,19 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _analizeOptionsBox.PackEnd(_androidAnalizeOptionsBox, hpos: WidgetPlacement.Center, marginTop: 10);
 
             _iosAnalizeOptionsBox.PackStart(_iosAnalizeOptionsLabel, hpos: WidgetPlacement.Center);
+            _iosResolutionMarginBox.PackStart(_iosResolutionMarginLabel);
+            _iosResolutionMarginBox.PackEnd(_iosResolutionMarginTextEntry);
             _iosAnalizeOptionsBox.PackStart(_iosStandardFileConditionCheckbox, marginBottom: -8);
             _iosAnalizeOptionsBox.PackStart(_iosX2FileConditionCheckbox, marginBottom: -8);
             _iosAnalizeOptionsBox.PackStart(_iosX3FileConditionCheckbox, marginBottom: -8);
+            _iosAnalizeOptionsBox.PackStart(_iosResolutionFileConditionCheckbox, marginBottom: -10);
+            _iosAnalizeOptionsBox.PackStart(_iosResolutionMarginBox, marginBottom: -8, marginLeft: 25);
+
+
 
             _androidAnalizeOptionsBox.PackStart(_androidAnalizeOptionsLabel, hpos: WidgetPlacement.Center);
+            _androidResolutionMarginBox.PackStart(_androidResolutionMarginLabel);
+            _androidResolutionMarginBox.PackEnd(_androidResolutionMarginTextEntry);
             _androidAnalizeOptionsBox.PackStart(_androidStandardFileConditionCheckbox, marginBottom: -8);
             _androidAnalizeOptionsBox.PackStart(_androidLdpiFileConditionCheckbox, marginBottom: -8);
             _androidAnalizeOptionsBox.PackStart(_androidMdpiFileConditionCheckbox, marginBottom: -8);
@@ -238,6 +267,9 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidAnalizeOptionsBox.PackStart(_androidXhdpiFileConditionCheckbox, marginBottom: -8);
             _androidAnalizeOptionsBox.PackStart(_androidXxhdpiFileConditionCheckbox, marginBottom: -8);
             _androidAnalizeOptionsBox.PackStart(_androidXxxhdpiFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidResolutionFileConditionCheckbox, marginBottom: -8);
+            _androidAnalizeOptionsBox.PackStart(_androidResolutionMarginBox, marginBottom: -8, marginLeft: 25);
+
 
             Content = _mainNotebook;
         }
@@ -418,6 +450,11 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                 if (_androidXxxhdpiFileConditionCheckbox.Active)
                     assetConditions.Add(new AndroidContainsXxxhdpiFileCondition(assetAndroid));
 
+                if (_androidResolutionFileConditionCheckbox.Active)
+                {
+                    int.TryParse(_androidResolutionMarginTextEntry.Text, out int sizeMargin);
+                    assetConditions.Add(new SizesFilesAndroidCondition(assetAndroid, sizeMargin));
+                }
             }
             else if (assetProperties.Asset is AssetiOS assetiOS)
             {
@@ -430,6 +467,11 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                 if (_iosX3FileConditionCheckbox.Active)
                     assetConditions.Add(new IOSContainsX3FileCondition(assetiOS));
 
+                if (_iosResolutionFileConditionCheckbox.Active)
+                {
+                    int.TryParse(_iosResolutionMarginTextEntry.Text, out int sizeMargin);
+                    assetConditions.Add(new SizesFilesiOSCondition(assetiOS, sizeMargin));
+                }
             }
 
             return assetConditions;
