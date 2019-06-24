@@ -19,6 +19,11 @@ jobs:
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '**/*.sln'
+        
+    - task: VSTest@2
+      inputs:
+        testSelector: 'testRun'
+        searchFolder: '$(System.DefaultWorkingDirectory)'
        
     - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
       displayName: 'Build SwissAddinKnife'
