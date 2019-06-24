@@ -25,14 +25,6 @@ jobs:
 
     - script: msbuild /p:Configuration=Release SwissAddinKnife.Test/SwissAddinKnife.Test.csproj
       displayName: 'Build SwissAddinKnife Test'
-    - task: VSTest@2
-      inputs:
-        testSelector: 'testAssemblies'
-        testAssemblyVer2: '**\*test*.dll
-          **\*Test*.dll
-          !**\*TestAdapter.dll
-          !**\obj\**'
-        searchFolder: '$(System.DefaultWorkingDirectory)'
         
     - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack SwissAddinKnife/bin/Release/net471/SwissAddinKnife.dll
       displayName: 'Build vs4mac Addin'
