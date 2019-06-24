@@ -19,11 +19,6 @@ jobs:
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '**/*.sln'
-        
-    - task: VisualStudioTestPlatformInstaller@1
-      inputs:
-        packageFeedSelector: 'nugetOrg'
-        versionSelector: 'latestStable'
        
     - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
       displayName: 'Build SwissAddinKnife'
