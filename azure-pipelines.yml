@@ -23,7 +23,7 @@ jobs:
     - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
       displayName: 'Build SwissAddinKnife'
 
-    - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.Test.csproj
+    - script: msbuild /p:Configuration=Release SwissAddinKnife.Test/SwissAddinKnife.Test.csproj
       displayName: 'Build SwissAddinKnife Test'
 
     - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack SwissAddinKnife/bin/Release/net471/SwissAddinKnife.dll
