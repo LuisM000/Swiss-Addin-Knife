@@ -19,14 +19,12 @@ jobs:
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '**/*.sln'
-        
-    - task: VSTest@2
-      inputs:
-        testSelector: 'testRun'
-        searchFolder: '$(System.DefaultWorkingDirectory)'
        
     - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
       displayName: 'Build SwissAddinKnife'
+
+    - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.Test.csproj
+      displayName: 'Build SwissAddinKnife Test'
 
     - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack SwissAddinKnife/bin/Release/net471/SwissAddinKnife.dll
       displayName: 'Build vs4mac Addin'
