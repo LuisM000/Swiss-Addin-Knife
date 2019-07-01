@@ -35,12 +35,16 @@
   <ItemGroup>
     <None Remove="Resources\cancel.png" />
     <None Remove="Resources\checked.png" />
+    <None Remove="Resources\warning.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\unsuccess.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\success.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\warning.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

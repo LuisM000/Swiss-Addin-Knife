@@ -14,6 +14,7 @@ using Xwt;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.AndroidFilesConditions;
 using SwissAddinKnife.Features.AssetsInspector.Core.AssetsConditions.IosFilesConditions;
+using System.Reflection;
 
 namespace SwissAddinKnife.Features.AssetsInspector.Views
 {
@@ -82,6 +83,8 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
         HBox _androidResolutionMarginBox;
         Label _androidResolutionMarginLabel;
         TextEntry _androidResolutionMarginTextEntry;
+        CheckBox _androidDrawableFileConditionCheckbox;
+
 
         public AssetsAnalyzerDialog(Solution solution)
         {
@@ -212,6 +215,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidXxxhdpiFileConditionCheckbox = new CheckBox(AndroidContainsXxxhdpiFileCondition.Description);
             _androidResolutionFileConditionCheckbox = new CheckBox(SizesFilesAndroidCondition.Description);
             _androidResolutionMarginTextEntry = new TextEntry() { WidthRequest = 35 };
+            _androidDrawableFileConditionCheckbox = new CheckBox(DrawableAssetAndroidCondition.Description);
             _androidStandardFileConditionCheckbox.Active = false;
             _androidLdpiFileConditionCheckbox.Active = true;
             _androidMdpiFileConditionCheckbox.Active = true;
@@ -221,6 +225,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidXxxhdpiFileConditionCheckbox.Active = true;
             _androidResolutionFileConditionCheckbox.Active = true;
             _androidResolutionMarginTextEntry.Text = "2";
+            _androidDrawableFileConditionCheckbox.Active = false;
         }
 
         void BuildGui()
@@ -269,7 +274,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             _androidAnalizeOptionsBox.PackStart(_androidXxxhdpiFileConditionCheckbox, marginBottom: -8);
             _androidAnalizeOptionsBox.PackStart(_androidResolutionFileConditionCheckbox, marginBottom: -8);
             _androidAnalizeOptionsBox.PackStart(_androidResolutionMarginBox, marginBottom: -8, marginLeft: 25);
-
+            _androidAnalizeOptionsBox.PackStart(_androidDrawableFileConditionCheckbox, marginBottom: -8);
 
             Content = _mainNotebook;
         }
@@ -402,9 +407,9 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                 return;
             foreach (var condition in assetProperties.Result.Value)
             {
-                var row = _selectedAssetResultStore.AddRow();
-                Image resultImage = condition.IsFulfilled ? Image.FromResource("SwissAddinKnife.Resources.success.png") :
-                                                            Image.FromResource("SwissAddinKnife.Resources.unsuccess.png");
+                var row = _selectedAssetResultStore.AddRow();              
+                var resultImage = condition.IsFulfilled ? Image.FromResource("SwissAddinKnife.Resources.success.png") :
+                                                               Image.FromResource("SwissAddinKnife.Resources.unsuccess.png");
 
                 _selectedAssetResultStore.SetValue(row, _selectedAssetResultIconField, resultImage.WithBoxSize(15));
                 _selectedAssetResultStore.SetValue(row, _selectedAssetResultDescriptionField, condition.Description);
@@ -455,6 +460,10 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
                     int.TryParse(_androidResolutionMarginTextEntry.Text, out int sizeMargin);
                     assetConditions.Add(new SizesFilesAndroidCondition(assetAndroid, sizeMargin));
                 }
+
+                if(_androidDrawableFileConditionCheckbox.Active)
+                    assetConditions.Add(new DrawableAssetAndroidCondition(assetAndroid));
+
             }
             else if (assetProperties.Asset is AssetiOS assetiOS)
             {
