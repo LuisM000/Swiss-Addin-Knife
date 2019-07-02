@@ -12,17 +12,11 @@ namespace SwissAddinKnife.Test.AssetsInspector
     {
 
         [Test]
-        public void ReturnsFalseIfContainsAllAssets()
+        public void ReturnsFalseIfContainsDrawableAndMdpiAssets()
         {
             Mock<AssetAndroid> assetAndroid = new Mock<AssetAndroid>("dummy");
             assetAndroid.SetupGet(a => a.StandardFilePath).Returns("dummy");
-            assetAndroid.SetupGet(a => a.LdpiFilePath).Returns("ldpi");
             assetAndroid.SetupGet(a => a.MdpiFilePath).Returns("mdpi");
-            assetAndroid.SetupGet(a => a.HdpiFilePath).Returns("hdpi");
-            assetAndroid.SetupGet(a => a.XhdpiFilePath).Returns("xhdpi");
-            assetAndroid.SetupGet(a => a.XxhdpiFilePath).Returns("xxhdpi");
-            assetAndroid.SetupGet(a => a.XxxhdpiFilePath).Returns("xxxhdpi");
-
 
             DrawableAssetAndroidCondition drawableAssetAndroidCondition = new DrawableAssetAndroidCondition(assetAndroid.Object);
 
@@ -34,13 +28,7 @@ namespace SwissAddinKnife.Test.AssetsInspector
         {
             Mock<AssetAndroid> assetAndroid = new Mock<AssetAndroid>("dummy");
             assetAndroid.SetupGet(a => a.StandardFilePath).Returns((string)null);
-            assetAndroid.SetupGet(a => a.LdpiFilePath).Returns("ldpi");
-            assetAndroid.SetupGet(a => a.MdpiFilePath).Returns("mdpi");
-            assetAndroid.SetupGet(a => a.HdpiFilePath).Returns("hdpi");
-            assetAndroid.SetupGet(a => a.XhdpiFilePath).Returns("xhdpi");
-            assetAndroid.SetupGet(a => a.XxhdpiFilePath).Returns("xxhdpi");
-            assetAndroid.SetupGet(a => a.XxxhdpiFilePath).Returns("xxxhdpi");
-
+            assetAndroid.SetupGet(a => a.MdpiFilePath).Returns("mdpi");            
 
             DrawableAssetAndroidCondition drawableAssetAndroidCondition = new DrawableAssetAndroidCondition(assetAndroid.Object);
 
@@ -48,17 +36,11 @@ namespace SwissAddinKnife.Test.AssetsInspector
         }
 
         [Test]
-        public void ReturnsTrueIfNotContainsAnyAsset()
+        public void ReturnsTrueIfNotContainsMdpiAsset()
         {
             Mock<AssetAndroid> assetAndroid = new Mock<AssetAndroid>("dummy");
             assetAndroid.SetupGet(a => a.StandardFilePath).Returns("dummy");
-            assetAndroid.SetupGet(a => a.LdpiFilePath).Returns("ldpi");
             assetAndroid.SetupGet(a => a.MdpiFilePath).Returns((string)null);
-            assetAndroid.SetupGet(a => a.HdpiFilePath).Returns("hdpi");
-            assetAndroid.SetupGet(a => a.XhdpiFilePath).Returns("xhdpi");
-            assetAndroid.SetupGet(a => a.XxhdpiFilePath).Returns("xxhdpi");
-            assetAndroid.SetupGet(a => a.XxxhdpiFilePath).Returns("xxxhdpi");
-
 
             DrawableAssetAndroidCondition drawableAssetAndroidCondition = new DrawableAssetAndroidCondition(assetAndroid.Object);
 
