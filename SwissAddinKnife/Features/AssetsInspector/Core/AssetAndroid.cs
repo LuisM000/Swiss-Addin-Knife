@@ -20,7 +20,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Core
         {
             get
             {
-                var files = new List<string>() { StandardFilePath, LdpiFilePath, MdpiFilePath, HdpiFilePath, HdpiFilePath, XhdpiFilePath, XxhdpiFilePath, XxxhdpiFilePath };
+                var files = new List<string>() { StandardFilePath, LdpiFilePath, MdpiFilePath, HdpiFilePath, XhdpiFilePath, XxhdpiFilePath, XxxhdpiFilePath };
                 return files.Where(f => !string.IsNullOrEmpty(f)).Select(f => new FileAndroid(f)).ToList<FileBase>();              
             }
         }
