@@ -28,7 +28,11 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
         Label _imagesLabel;
         HBox _imagesBox;
         Button _imagesSelectorButton;
-        ListBox _imagesListBox;
+
+        ListView _imagesListView;
+        ListStore _imagesStore;
+        DataField<string> _imagePathField;
+        DataField<string> _imageNameField;
 
         Label _outputFolderLabel;
         HBox _outputFolderBox;
@@ -77,11 +81,19 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
 
             _imagesLabel = new Label("Select the largest image files to generate different sizes for all platforms");
             _imagesBox = new HBox();
-            _imagesListBox = new ListBox
+
+            _imageNameField = new DataField<string>();
+            _imagePathField = new DataField<string>();
+            _imagesStore = new ListStore(_imageNameField, _imagePathField);
+            _imagesListView = new ListView
             {
                 WidthRequest = 460,
                 HeightRequest = 120
             };
+            _imagesListView.Columns.Add("Output name (editable)", new TextCellView(_imageNameField) { Editable = true });
+            _imagesListView.Columns.Add("Path", new TextCellView(_imagePathField));
+            _imagesListView.DataSource = _imagesStore;
+           
             _imagesSelectorButton = new Button("...")
             {
                 ExpandVertical = false,
@@ -124,7 +136,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             _mainBox.PackStart(_baseSizeBox, marginBottom: 5);
 
             _mainBox.PackStart(_imagesLabel);
-            _imagesBox.PackStart(_imagesListBox, marginTop: 5);
+            _imagesBox.PackStart(_imagesListView, marginTop: 5);
             _imagesBox.PackEnd(_imagesSelectorButton);
             _mainBox.PackStart(_imagesBox);
             _mainBox.PackStart(_outputFolderLabel, marginTop: 15);
@@ -158,9 +170,13 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
         {
             if (fileDialog.Run(this))
             {
-                _imagesListBox.Items.Clear();
+                _imagesStore.Clear();
                 foreach (var fileName in fileDialog.FileNames)
-                    _imagesListBox.Items.Add(fileName);
+                {
+                    var row = _imagesStore.AddRow();
+                    _imagesStore.SetValue(row, _imageNameField, Path.GetFileNameWithoutExtension(fileName));
+                    _imagesStore.SetValue(row, _imagePathField, fileName);
+                }
             }
         }
 
@@ -183,8 +199,11 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             bool success = true;
             string outputFolder = _outputFolderEntry.Text;
 
-            foreach (var path in fileDialog.FileNames)
+            for (int i = 0; i < _imagesStore.RowCount; i++)
             {
+                var path = _imagesStore.GetValue(i, _imagePathField);
+                var outputAssetName = _imagesStore.GetValue(i, _imageNameField);
+
                 try
                 {
                     var outputProperties = _3xRadioButton.Active ?
@@ -196,7 +215,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
 
                     ImageProperties imageProperties = new ImageProperties()
                     {
-                        FileName = Path.GetFileNameWithoutExtension(path),
+                        FileName = outputAssetName,
                         Image = file,
                         ImageOutputProperties = outputProperties
                     };
