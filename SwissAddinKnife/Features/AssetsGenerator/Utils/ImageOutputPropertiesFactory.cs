@@ -241,11 +241,31 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Utils
             };
         }
 
+        public static IList<ImageOutputProperties> CreateForAndroid4xWithDrawable(string fileExtension, string rootPath, bool overwriteFiles)
+        {
+            return CreateForAndroid4x(fileExtension, rootPath, overwriteFiles, true);
+        }
 
-        public static IList<ImageOutputProperties> CreateForAndroid4x(string fileExtension, string rootPath, bool overwriteFiles)
+        public static IList<ImageOutputProperties> CreateForAndroid3xWithDrawable(string fileExtension, string rootPath, bool overwriteFiles)
+        {
+            return CreateForAndroid3x(fileExtension, rootPath, overwriteFiles, true);
+        }
+
+        public static IList<ImageOutputProperties> CreateForAndroid4xWithoutDrawable(string fileExtension, string rootPath, bool overwriteFiles)
+        {
+            return CreateForAndroid4x(fileExtension, rootPath, overwriteFiles, false);
+        }
+
+        public static IList<ImageOutputProperties> CreateForAndroid3xWithoutDrawable(string fileExtension, string rootPath, bool overwriteFiles)
+        {
+            return CreateForAndroid3x(fileExtension, rootPath, overwriteFiles, false);
+        }
+
+        public static IList<ImageOutputProperties> CreateForAndroid4x(string fileExtension, string rootPath,
+                                                                        bool overwriteFiles, bool includeDrawableImage)
         {
             ImageFormat imageFormat = new ImageFormat(fileExtension);
-            return new List<ImageOutputProperties>()
+            var imageOutputProperties = new List<ImageOutputProperties>()
             {
                 new ImageOutputProperties()
                 {
@@ -301,18 +321,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Utils
                     ImageFormat = imageFormat,
                     ImageDimensions = new ImageDimensions() { Percentage = 0.25 },
                     OverwriteFile = overwriteFiles
-                },
-                 new ImageOutputProperties()
-                 {
-                     FolderPath = new FolderPath()
-                     {
-                         IsAbsolute = true,
-                         Path = Path.Combine(rootPath, "drawable")
-                     },
-                     ImageFormat = imageFormat,
-                     ImageDimensions = new ImageDimensions() { Percentage = 0.25 },
-                    OverwriteFile = overwriteFiles
-                 },
+                },                 
                 new ImageOutputProperties()
                 {
                     FolderPath = new FolderPath()
@@ -325,11 +334,30 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Utils
                     OverwriteFile = overwriteFiles
                 }
             };
+
+            if(includeDrawableImage)
+            {
+                imageOutputProperties.Add(new ImageOutputProperties()
+                {
+                    FolderPath = new FolderPath()
+                    {
+                        IsAbsolute = true,
+                        Path = Path.Combine(rootPath, "drawable")
+                    },
+                    ImageFormat = imageFormat,
+                    ImageDimensions = new ImageDimensions() { Percentage = 0.25 },
+                    OverwriteFile = overwriteFiles
+                });
+            }
+
+            return imageOutputProperties;
         }
-        public static IList<ImageOutputProperties> CreateForAndroid3x(string fileExtension, string rootPath, bool overwriteFiles)
-        {
+
+        public static IList<ImageOutputProperties> CreateForAndroid3x(string fileExtension, string rootPath,
+                                                                        bool overwriteFiles, bool includeDrawableImage)
+        { 
             ImageFormat imageFormat = new ImageFormat(fileExtension);
-            return new List<ImageOutputProperties>()
+            var imageOutputProperties = new List<ImageOutputProperties>()
             {
                 new ImageOutputProperties()
                 {
@@ -375,17 +403,6 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Utils
                     ImageDimensions = new ImageDimensions() { Percentage = 1d/3d },
                     OverwriteFile = overwriteFiles
                 },
-                 new ImageOutputProperties()
-                 {
-                     FolderPath = new FolderPath()
-                     {
-                         IsAbsolute = true,
-                         Path = Path.Combine(rootPath, "drawable")
-                     },
-                     ImageFormat = imageFormat,
-                     ImageDimensions = new ImageDimensions() { Percentage = 1d/3d },
-                    OverwriteFile = overwriteFiles
-                 },
                 new ImageOutputProperties()
                 {
                     FolderPath = new FolderPath()
@@ -398,6 +415,23 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Utils
                     OverwriteFile = overwriteFiles
                 }
             };
+
+            if(includeDrawableImage)
+            {
+                imageOutputProperties.Add(new ImageOutputProperties()
+                {
+                    FolderPath = new FolderPath()
+                    {
+                        IsAbsolute = true,
+                        Path = Path.Combine(rootPath, "drawable")
+                    },
+                    ImageFormat = imageFormat,
+                    ImageDimensions = new ImageDimensions() { Percentage = 1d / 3d },
+                    OverwriteFile = overwriteFiles
+                });
+            }
+
+            return imageOutputProperties;
         }
 
         public static IList<ImageOutputProperties> CreateForIOS4x(string fileExtension, string rootPath, bool overwriteFiles)

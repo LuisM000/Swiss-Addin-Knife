@@ -45,6 +45,10 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
         CheckBox _androidCheckBox;
         Label _androidOptionsLabel;
 
+        HBox _androidDrawableBox;
+        CheckBox _androidDrawableCheckBox;
+        Label _androidDrawableOptionsLabel;
+
 
         ListView _resultListView;
         ListStore _resultsStore;
@@ -72,7 +76,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             _mainNotebook = new Notebook();
             _mainBox = new VBox()
             {
-                HeightRequest = 350,
+                HeightRequest = 370,
                 WidthRequest = 500
             };
 
@@ -125,12 +129,21 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             {
                 Active = true
             };
+            _androidDrawableBox = new HBox();
+            _androidDrawableCheckBox = new CheckBox("Android")
+            {
+                Active = false
+            };
             if (!solution.ContainsAnyAndroidProject())
             {
                 _androidCheckBox.Active = false;
                 _androidCheckBox.Sensitive = false;
+                _androidDrawableCheckBox.Active = false;
+                _androidDrawableCheckBox.Sensitive = false;
             }
             _androidOptionsLabel = new Label("ldpi mdpi hdpi xhdpi xxhdpi xxxhdpi");
+            _androidDrawableOptionsLabel = new Label("Include mdpi asset in Resources/drawable");
+
 
             _overwriteFilesCheckBox = new CheckBox("Allow rewrite files that already exist");
 
@@ -182,6 +195,10 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             _androidBox.PackStart(_androidCheckBox);
             _androidBox.PackStart(_androidOptionsLabel);
             _mainBox.PackStart(_androidBox);
+
+            _androidDrawableBox.PackStart(_androidDrawableCheckBox);
+            _androidDrawableBox.PackStart(_androidDrawableOptionsLabel);
+            _mainBox.PackStart(_androidDrawableBox);
 
             _mainBox.PackEnd(_generateButton, hpos: WidgetPlacement.End);
             _mainBox.Margin = new WidgetSpacing(10, 10, 10, 10);
@@ -236,17 +253,24 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             _resultsStore.Clear();
             _mainNotebook.CurrentTabIndex = 1;
             bool overwriteFiles = _overwriteFilesCheckBox.Active;
+            bool includeDrawableAsset = _androidDrawableCheckBox.Active;
 
             if (_androidCheckBox.Active)
             {
                 Func<string, string, bool, IList<ImageOutputProperties>> outputPropertiesFactory;
                 if (_3xRadioButton.Active)
                 {
-                    outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid3x;
+                    if (includeDrawableAsset)
+                        outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid3xWithDrawable;
+                    else
+                        outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid3xWithoutDrawable;
                 }
                 else
                 {
-                    outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid4x;
+                    if (includeDrawableAsset)
+                        outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid4xWithDrawable;
+                    else
+                        outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid4xWithoutDrawable;
                 }
 
                 foreach (var project in solution.GetAllProjects().Where(p => p.IsAndroidProject()))
