@@ -33,8 +33,13 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
         Label _imagesLabel;
         HBox _imagesBox;
         Button _imagesSelectorButton;
-        ListBox _imagesListBox;
         OpenFileDialog fileDialog;
+
+        ListView _imagesListView;
+        ListStore _imagesStore;
+        DataField<string> _imagePathField;
+        DataField<string> _imageNameField;
+
 
         HBox _iOSBox;
         CheckBox _iOSCheckBox;
@@ -97,11 +102,20 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
 
             _imagesLabel = new Label("Select the largest image files to generate different sizes for all platforms");
             _imagesBox = new HBox();
-            _imagesListBox = new ListBox
+
+            _imageNameField = new DataField<string>();
+            _imagePathField = new DataField<string>();
+            _imagesStore = new ListStore(_imageNameField, _imagePathField);
+            _imagesListView = new ListView
             {
                 WidthRequest = 460,
                 HeightRequest = 120
             };
+            _imagesListView.Columns.Add("Output name (editable)", new TextCellView(_imageNameField) { Editable = true });
+            _imagesListView.Columns.Add("Path", new TextCellView(_imagePathField));
+            _imagesListView.DataSource = _imagesStore;
+
+
             _imagesSelectorButton = new Button("...")
             {
                 ExpandVertical = false,
@@ -182,7 +196,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
             _mainBox.PackStart(_baseSizeBox, marginBottom: 5);
 
             _mainBox.PackStart(_imagesLabel);
-            _imagesBox.PackStart(_imagesListBox, marginTop: 5);
+            _imagesBox.PackStart(_imagesListView, marginTop: 5);
             _imagesBox.PackEnd(_imagesSelectorButton);
             _mainBox.PackStart(_imagesBox);
 
@@ -231,9 +245,13 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
         {
             if (fileDialog.Run(this))
             {
-                _imagesListBox.Items.Clear();
+                _imagesStore.Clear();
                 foreach (var fileName in fileDialog.FileNames)
-                    _imagesListBox.Items.Add(fileName);
+                {
+                    var row = _imagesStore.AddRow();
+                    _imagesStore.SetValue(row, _imageNameField, Path.GetFileNameWithoutExtension(fileName));
+                    _imagesStore.SetValue(row, _imagePathField, fileName);
+                }
             }
         }
         async void OnGenerateClicked(object sender, EventArgs args)
@@ -308,14 +326,17 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
 
         async Task GenerateAssetsAsync(Project project, string outputFolder, bool overwriteFiles, Func<string, string, bool, IList<ImageOutputProperties>> outputPropertiesFactory)
         {
-            foreach (var path in fileDialog.FileNames)
+            for (int i = 0; i < _imagesStore.RowCount; i++)
             {
+                var path = _imagesStore.GetValue(i, _imagePathField);
+                var outputAssetName = _imagesStore.GetValue(i, _imageNameField);
+
                 var outputProperties = outputPropertiesFactory(Path.GetExtension(path), outputFolder, overwriteFiles);
                 var file = File.ReadAllBytes(path);
 
                 ImageProperties imageProperties = new ImageProperties()
                 {
-                    FileName = Path.GetFileNameWithoutExtension(path),
+                    FileName = outputAssetName,
                     Image = file,
                     ImageOutputProperties = outputProperties
                 };
@@ -341,7 +362,6 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
                 {
                     _resultsStore.SetValue(row, _statusField, $"Exception: {ex.Message}");
                 }
-
             }
         }
 
