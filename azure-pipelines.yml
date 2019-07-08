@@ -11,7 +11,7 @@ trigger:
 jobs:
   - job: macOS
     pool:
-      name: Default
+      vmImage: 'macOS-latest'
 
     steps:
     - task: NuGetToolInstaller@0
