@@ -43,6 +43,9 @@
       <HintPath>..\packages\Moq.4.11.0\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -51,6 +54,8 @@
     <Folder Include="AssetsInspector\" />
     <Folder Include="AssetsInspector\AndroidFilesConditionsTest\" />
     <Folder Include="AssetsInspector\IOSFilesConditionsTest\" />
+    <Folder Include="TextResourcesEditor\" />
+    <Folder Include="TextResourcesEditor\TextResourcesSample\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetsInspector\AssetiOSShould.cs" />
@@ -70,12 +75,23 @@
     <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsX2FileConditionShould.cs" />
     <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsX3FileConditionShould.cs" />
     <Compile Include="AssetsInspector\DrawableAssetAndroidConditionShould.cs" />
+    <Compile Include="TextResourcesEditor\TextResourcesEditorShould.cs" />
+    <Compile Include="TextResourcesEditor\TextResourcesSample\TextResources.Designer.cs">
+      <DependentUpon>TextResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SwissAddinKnife\SwissAddinKnife.csproj">
       <Project>{AD0B4931-D1A7-4790-8FF0-6D326D874CB3}</Project>
       <Name>SwissAddinKnife</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TextResourcesEditor\TextResourcesSample\TextResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TextResources.Designer.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
