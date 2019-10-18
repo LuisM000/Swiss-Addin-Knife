@@ -43,6 +43,9 @@
             id="SwissAddinKnife.Commands.CreateCodeClassFromJson" />
         <CommandItem 
             id="SwissAddinKnife.Commands.AddCodeClassFile" />
+        <SeparatorItem/>
+        <CommandItem 
+            id="SwissAddinKnife.Commands.TextResourcesDialog" />
     </Extension>
 
     <Extension 
@@ -71,6 +74,10 @@
             id = "SwissAddinKnife.Commands.AddCodeClassFile"
             defaultHandler = "SwissAddinKnife.Features.JsonToClass.Commands.AddCodeClassFileCommand" 
             _label = "Create class file from JSON" />
+        <Command 
+            id = "SwissAddinKnife.Commands.TextResourcesDialog"
+            defaultHandler = "SwissAddinKnife.Features.TextResources.Commands.OpenTextResourcesDialogCommand" 
+            _label = "Open TextResources" />
     </Extension>
     
 </Addin>

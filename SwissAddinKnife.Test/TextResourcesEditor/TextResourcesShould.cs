@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
 using SwissAddinKnife.Features.TextResources;
+using SwissAddinKnife.Features.TextResources.Services;
 
 namespace SwissAddinKnife.Test.TextResourcesEditor
 {
@@ -18,7 +19,7 @@ namespace SwissAddinKnife.Test.TextResourcesEditor
         [Test]
         public void LoadAllResources()
         {
-            TextResourcesManager textResourcesManager = new TextResourcesManager(textResourcesPath);
+            TextResources textResourcesManager = new TextResources(textResourcesPath);
             textResourcesManager.LoadResources();
 
             Assert.AreEqual(2, textResourcesManager.Values.Count);
@@ -27,7 +28,7 @@ namespace SwissAddinKnife.Test.TextResourcesEditor
         [Test]
         public void LoadKeys()
         {
-            TextResourcesManager textResourcesManager = new TextResourcesManager(textResourcesPath);
+            TextResources textResourcesManager = new TextResources(textResourcesPath);
             textResourcesManager.LoadResources();
 
             Assert.IsTrue(textResourcesManager.Values.ContainsKey("key1"));
@@ -37,7 +38,7 @@ namespace SwissAddinKnife.Test.TextResourcesEditor
         [Test]
         public void LoadValues()
         {
-            TextResourcesManager textResourcesManager = new TextResourcesManager(textResourcesPath);
+            TextResources textResourcesManager = new TextResources(textResourcesPath);
             textResourcesManager.LoadResources();
 
             Assert.AreEqual("value 1", textResourcesManager.Values["key1"]);

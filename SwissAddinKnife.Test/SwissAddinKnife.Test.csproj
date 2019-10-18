@@ -75,7 +75,7 @@
     <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsX2FileConditionShould.cs" />
     <Compile Include="AssetsInspector\IOSFilesConditionsTest\IOSContainsX3FileConditionShould.cs" />
     <Compile Include="AssetsInspector\DrawableAssetAndroidConditionShould.cs" />
-    <Compile Include="TextResourcesEditor\TextResourcesEditorShould.cs" />
+    <Compile Include="TextResourcesEditor\TextResourcesShould.cs" />
     <Compile Include="TextResourcesEditor\TextResourcesSample\TextResources.Designer.cs">
       <DependentUpon>TextResources.resx</DependentUpon>
     </Compile>

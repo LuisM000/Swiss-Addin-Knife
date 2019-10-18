@@ -32,6 +32,9 @@
     <Folder Include="Features\AssetsInspector\Core\AssetsConditions\AndroidFilesConditions\" />
     <Folder Include="Features\AssetsInspector\Core\AssetsConditions\IosFilesConditions\" />
     <Folder Include="Features\TextResources\" />
+    <Folder Include="Features\TextResources\Services\" />
+    <Folder Include="Features\TextResources\Views\" />
+    <Folder Include="Features\TextResources\Commands\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\cancel.png" />

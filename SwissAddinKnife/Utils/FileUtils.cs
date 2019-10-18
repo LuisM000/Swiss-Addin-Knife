@@ -20,5 +20,11 @@ namespace SwissAddinKnife.Utils
 
             return filesFound.ToArray();
         }
+
+      
+        public static string[] GetTextResourcesFiles(string searchFolder)
+        {
+            return Directory.GetFiles(searchFolder, string.Format("*.{0}", "resx"), SearchOption.TopDirectoryOnly);
+        }
     }
 }

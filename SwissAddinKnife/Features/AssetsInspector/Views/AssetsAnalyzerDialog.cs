@@ -138,7 +138,7 @@ namespace SwissAddinKnife.Features.AssetsInspector.Views
             {
                 GridLinesVisible = GridLines.Both,
             };
-            _resultListView.Columns.Add("Asset", new TextCellView(_imageFileNameField));
+            _resultListView.Columns.Add("Asset-", new TextCellView(_imageFileNameField));
             _resultListView.Columns.Add("Project", new TextCellView(_projectNameField));
             _resultListView.Columns.Add("Result", new TextCellView(_resultField));
             _resultListView.DataSource = _resultsStore;
