@@ -8,12 +8,14 @@ namespace SwissAddinKnife.Features.TextResources.Services
     public class TextResources
     {
         XDocument resourcesDocument;
+        private readonly string filePath;
 
         public IDictionary<string, string> Values { get; set; }
         public string Name { get; }
 
         public TextResources(string filePath)
         {
+            this.filePath = filePath;
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 resourcesDocument = XDocument.Load(fs);
@@ -40,22 +42,51 @@ namespace SwissAddinKnife.Features.TextResources.Services
                 var key = data.FirstAttribute.Value;
                 data.Element("value").SetValue(Values[key]);
             }
-            resourcesDocument.Save(Name + ".resx");//ToDo:rewiew filepath..
+            resourcesDocument.Save(filePath);
         }
 
-        public string GetValueOrEmpty(string key)
+        public string GetValue(string key)
         {
-            if (Values.TryGetValue(key, out string value))
-            {
-                return value;
-            }
-            return string.Empty;
+            Values.TryGetValue(key, out string value);
+            return value;
         }
 
-        public void SetValue(string key, string value)
+        public void SaveValue(string key, string value)
+        {
+            if(Values.ContainsKey(key))
+            {
+                UpdateValue(key, value);
+            }
+            else
+            {
+                CreateValue(key, value);
+            }
+        }
+
+        private void UpdateValue(string key, string value)
         {
             Values[key] = value;
-            SaveResources();
+            foreach (var data in resourcesDocument.Root.Elements("data"))
+            {
+                if (data.FirstAttribute.Value == key)
+                {
+                    data.Element("value").SetValue(value);
+                    resourcesDocument.Save(filePath);
+                    return;
+                }
+            }
+        }
+
+        private void CreateValue(string key, string value)
+        {
+            Values[key] = value;
+            var xData = new XElement("data");
+            xData.SetAttributeValue("name", key);
+            xData.SetAttributeValue(XNamespace.Xml + "space", "preserve");
+            xData.Add(new XElement("value", value));
+
+            resourcesDocument.Root.Add(xData);
+            resourcesDocument.Save(filePath);
         }
     }
 

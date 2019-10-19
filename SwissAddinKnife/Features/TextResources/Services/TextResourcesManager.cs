@@ -38,25 +38,9 @@ namespace SwissAddinKnife.Features.TextResources.Services
             return TextResources.SelectMany(t => t.Values.Keys).Distinct();
         }
 
-        public IEnumerable<string> GetValues(TextResources textResources, IEnumerable<string> keys)
-        {
-            foreach (var key in keys)
-            {
-                yield return textResources.Values[key];
-            }
-        }
-
-        public IEnumerable<Tuple<TextResources,string>> GetValues(string key)
-        {
-            foreach (var resources in TextResources)
-            {
-                yield return new Tuple<TextResources, string>(resources, resources.GetValueOrEmpty(key));
-            }
-        }
-
         public string GetValue(string resourcesName, string key)
         {
-            return TextResources.FirstOrDefault(f => f.Name == resourcesName).GetValueOrEmpty(key);
+            return TextResources.FirstOrDefault(f => f.Name == resourcesName).GetValue(key);
         } 
     }
 }
