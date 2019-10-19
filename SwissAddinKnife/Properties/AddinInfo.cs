@@ -4,7 +4,7 @@ using Mono.Addins.Description;
 [assembly: Addin(
     "SwissAddinKnife",
     Namespace = "SwissAddinKnife",
-    Version = "0.4.1"
+    Version = "0.5.0-pre"
 )]
 
 [assembly: AddinName("SwissAddinKnife")]
