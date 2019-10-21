@@ -41,6 +41,26 @@ namespace SwissAddinKnife.Features.TextResources.Services
         public string GetValue(string resourcesName, string key)
         {
             return TextResources.FirstOrDefault(f => f.Name == resourcesName).GetValue(key);
-        } 
+        }
+
+        public void SaveValueInMainResource(string key, string value)
+        {
+            TextResources.OrderBy(t => t.Name.Length).FirstOrDefault().SaveValue(key, value);
+        }
+
+        public string CreateAvailableKey()
+        {
+            var allkeys = this.GetAllKeys();
+            string increment = "";
+            string key = "new_resources";
+            int i = 1;
+            while(allkeys.Contains(key + increment))
+            {
+                increment = "_" + i;
+                i++;
+            }
+
+            return key + increment;
+        }
     }
 }

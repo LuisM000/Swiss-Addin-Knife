@@ -12,7 +12,12 @@ namespace SwissAddinKnife.Features.TextResources.Commands
         protected override void Run()
         {
             var folderPath = (ProjectFolder)IdeApp.ProjectOperations.CurrentSelectedItem;
-            _ = new TextResourcesWindow(folderPath.Path);
+            var window = new TextResourcesWindow(folderPath.Path)
+            {
+                Modal = true
+            };
+            window.Maximize();
+            window.ShowAll();
         }
 
     }
