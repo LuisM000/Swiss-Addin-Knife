@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace SwissAddinKnife.Features.TextResources.Services
@@ -50,6 +51,22 @@ namespace SwissAddinKnife.Features.TextResources.Services
             Values.TryGetValue(key, out string value);
             return value;
         }
+
+        public void UpdateKey(string oldKey, string newKey)
+        {
+            if (Values.ContainsKey(oldKey))
+            {
+                var value = Values[oldKey];
+                Values.Remove(oldKey);
+                Values.Add(newKey, value);
+
+                resourcesDocument.Root.Elements("data").
+                    FirstOrDefault(d => d.HasAttributes && d.Attribute("name")?.Value == oldKey).
+                    SetAttributeValue("name", newKey);
+                resourcesDocument.Save(filePath);
+            }
+        }
+
 
         public void SaveValue(string key, string value)
         {

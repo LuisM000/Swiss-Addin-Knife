@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 using Gtk;
 using SwissAddinKnife.Features.TextResources.Services;
 
@@ -60,6 +55,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
                 Width = 300,
                 Background = "black"
             };
+            keyCell.Edited += OnKeyCellEdited;
             keysColumn.PackStart(keyCell, true);
 
             keysColumn.SetCellDataFunc(keyCell, new Gtk.TreeCellDataFunc(HandleKeyCellDataFunc));
@@ -92,6 +88,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
             _textResourcesTreeView.Model = _filter;
         }
 
+      
         private Widget CreateFilterWidget()
         {
             VBox filterBox = new VBox();
@@ -125,6 +122,16 @@ namespace SwissAddinKnife.Features.TextResources.Views
 
             textResources.SaveValue(key, args.NewText);
         }
+
+        void OnKeyCellEdited(object o, EditedArgs args)
+        {
+            var newKey = args.NewText;
+            _resourcesListStore.GetIter(out TreeIter iter, new TreePath(args.Path));
+            var oldKey = (string)_resourcesListStore.GetValue(iter, 0);
+            _textResourcesManager.UpdateKey(oldKey, newKey);
+            _resourcesListStore.SetValue(iter,0,newKey);
+        }
+
 
         void FilterByKeyEntry_FocusOutEvent(object sender, EventArgs e)
         {

@@ -48,6 +48,14 @@ namespace SwissAddinKnife.Features.TextResources.Services
             TextResources.OrderBy(t => t.Name.Length).FirstOrDefault().SaveValue(key, value);
         }
 
+        public void UpdateKey(string oldKey, string newKey)
+        {
+            foreach (var resources in TextResources)
+            {
+                resources.UpdateKey(oldKey, newKey);
+            }
+        }
+
         public string CreateAvailableKey()
         {
             var allkeys = this.GetAllKeys();
@@ -62,5 +70,7 @@ namespace SwissAddinKnife.Features.TextResources.Services
 
             return key + increment;
         }
+
+      
     }
 }
