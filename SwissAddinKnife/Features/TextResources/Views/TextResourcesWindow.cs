@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Gtk;
 using SwissAddinKnife.Features.TextResources.Services;
 
@@ -30,7 +31,6 @@ namespace SwissAddinKnife.Features.TextResources.Views
             _resourcesListStore = new ListStore(typeof(string));
             _textResourcesTreeView = new TreeView();
 
-
             var filterWidget = CreateFilterWidget();
             VBox vBox = new VBox();
             vBox.PackStart(filterWidget, false, false, 5);
@@ -40,6 +40,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
             BuildTextResourcesTreeView();
         }
 
+
         public void BuildTextResourcesTreeView()
         {
             TreeViewColumn keysColumn = new TreeViewColumn
@@ -47,13 +48,15 @@ namespace SwissAddinKnife.Features.TextResources.Views
                 Title = string.Empty,
                 Resizable = true
             };
+            keysColumn.AddNotification("width",(object o, GLib.NotifyArgs args) => OnColumnWidthChanged(keysColumn));
             _textResourcesTreeView.AppendColumn(keysColumn);
 
             CellRendererText keyCell = new Gtk.CellRendererText
             {
                 Editable = true,
                 Width = 300,
-                Background = "black"
+                Background = "black"              
+
             };
             keyCell.Edited += OnKeyCellEdited;
             keysColumn.PackStart(keyCell, true);
@@ -67,12 +70,16 @@ namespace SwissAddinKnife.Features.TextResources.Views
                     Title = textResource.Name,
                     Resizable = true
                 };
+                keysColumn.AddNotification("width", (object o, GLib.NotifyArgs args) => OnColumnWidthChanged(resourcesColumn));
                 _textResourcesTreeView.AppendColumn(resourcesColumn);
 
                 CellRendererText valueCell = new Gtk.CellRendererText
                 {
                     Width = 200,
-                    Editable = true
+                    Editable = true,
+                    WrapWidth = 200,
+                    SingleParagraphMode = false,
+                    WrapMode = Pango.WrapMode.WordChar,
                 };
                 valueCell.Edited += (o, args) => OnValueCellEdited((CellRendererText)o, args, textResource);
                 resourcesColumn.PackStart(valueCell, true);
@@ -88,7 +95,16 @@ namespace SwissAddinKnife.Features.TextResources.Views
             _textResourcesTreeView.Model = _filter;
         }
 
-      
+        void OnColumnWidthChanged(TreeViewColumn treeViewColumn)
+        {
+            if(treeViewColumn.Cells.Any() && treeViewColumn.Cells[0] is CellRendererText cellRendererText
+                && cellRendererText.WrapWidth > 0 && treeViewColumn.Width > 0 && cellRendererText.WrapWidth != treeViewColumn.Width)
+            {
+                cellRendererText.WrapWidth = treeViewColumn.Width;
+            }
+        }
+
+
         private Widget CreateFilterWidget()
         {
             VBox filterBox = new VBox();
@@ -165,8 +181,8 @@ namespace SwissAddinKnife.Features.TextResources.Views
         {
             var key = (string)tree_model.GetValue(iter, 0);
             var value = _textResourcesManager.GetValue(tree_column.Title, key);
-            var cellText = (CellRendererText)cell;
-
+            var cellText = (CellRendererText)cell;    
+                   
             if (value == null)
             {
                 cellText.Background = "red";
@@ -176,7 +192,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
                 cellText.Background = null;
             }
 
-            ((CellRendererText)cell).Text = value;
+            cellText.Text = value;
         }
 
         void HandleKeyCellDataFunc(TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter)
@@ -184,6 +200,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
             var key = (string)tree_model.GetValue(iter, 0);
             var cellText = (CellRendererText)cell; 
            ((CellRendererText)cell).Text = key;
+          
         }
     }
 }
