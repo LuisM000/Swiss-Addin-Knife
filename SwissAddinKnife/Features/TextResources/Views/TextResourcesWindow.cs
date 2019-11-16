@@ -55,8 +55,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
             {
                 Editable = true,
                 Width = 300,
-                Background = "black"              
-
+                Background = "black"
             };
             keyCell.Edited += OnKeyCellEdited;
             keysColumn.PackStart(keyCell, true);
@@ -114,7 +113,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
 
             var labelFilter = new Label("Filter by key:");
             _filterByKeyEntry = new Entry();
-            _filterByKeyEntry.FocusOutEvent += FilterByKeyEntry_FocusOutEvent;
+            _filterByKeyEntry.KeyReleaseEvent+= FilterByKeyEntry_KeyReleaseEvent; ;
             _filter = new Gtk.TreeModelFilter(_resourcesListStore, null)
             {
                 VisibleFunc = new Gtk.TreeModelFilterVisibleFunc(FilterByKeyVisibleFunc)
@@ -129,7 +128,7 @@ namespace SwissAddinKnife.Features.TextResources.Views
 
             return filterBox;
         }
-
+        
         void OnValueCellEdited(CellRendererText cell, Gtk.EditedArgs args, Services.TextResources textResources)
         {
             _filter.GetIter(out TreeIter iter, new TreePath(args.Path));
@@ -148,12 +147,13 @@ namespace SwissAddinKnife.Features.TextResources.Views
             _resourcesListStore.SetValue(iter,0,newKey);
         }
 
-
-        void FilterByKeyEntry_FocusOutEvent(object sender, EventArgs e)
+        void FilterByKeyEntry_KeyReleaseEvent(object o, KeyReleaseEventArgs args)
         {
-            _filter.Refilter();
+            if (args?.Event.Key == Gdk.Key.Return)
+            {
+                _filter.Refilter();
+            }
         }
-
 
         void OnAddResourceButtonClicked(object sender, EventArgs e)
         {
