@@ -143,10 +143,14 @@ namespace SwissAddinKnife.Features.TextResources.Views
         void OnKeyCellEdited(object o, EditedArgs args)
         {
             var newKey = args.NewText;
-            _resourcesListStore.GetIter(out TreeIter iter, new TreePath(args.Path));
-            var oldKey = (string)_resourcesListStore.GetValue(iter, 0);
+            _filter.GetIter(out TreeIter iter, new TreePath(args.Path));
+            var oldKey = (string)_filter.GetValue(iter, 0);
+            int indexOfOldKey = _textResourcesManager.GetAllKeys().IndexOf(oldKey);
+
+            _resourcesListStore.GetIter(out TreeIter iterList, new TreePath(indexOfOldKey.ToString()));
+            _resourcesListStore.SetValue(iterList, 0, newKey);
+
             _textResourcesManager.UpdateKey(oldKey, newKey);
-            _resourcesListStore.SetValue(iter,0,newKey);
         }
 
         void FilterByKeyEntry_KeyReleaseEvent(object o, KeyReleaseEventArgs args)
