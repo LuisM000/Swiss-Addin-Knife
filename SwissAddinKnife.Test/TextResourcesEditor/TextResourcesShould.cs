@@ -1,11 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Resources;
-using System.Xml;
-using System.Xml.Linq;
+﻿using System.IO;
 using NUnit.Framework;
-using SwissAddinKnife.Features.TextResources;
 using SwissAddinKnife.Features.TextResources.Services;
 
 namespace SwissAddinKnife.Test.TextResourcesEditor
@@ -13,13 +7,20 @@ namespace SwissAddinKnife.Test.TextResourcesEditor
     [TestFixture]
     public class TextResourcesEditorShould
     {
-        string textResourcesPath = string.Concat(Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar, "TextResourcesEditor/TextResourcesSample/TextResources.resx");
+        string textResourcesWithTwoKeysPath;
 
+       [OneTimeSetUp]
+        public void CreateTextResources()
+        {
+            string originResourcesWithTwoKeysPath = string.Concat(Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar, "TextResourcesEditor/TextResourcesSample/TextResources.resx");
+            textResourcesWithTwoKeysPath = string.Concat(Directory.GetCurrentDirectory(), Path.DirectorySeparatorChar, System.Guid.NewGuid(), ".resx");
+            File.Copy(originResourcesWithTwoKeysPath, textResourcesWithTwoKeysPath, true);
+        }
 
         [Test]
         public void LoadAllResources()
         {
-            TextResources textResourcesManager = new TextResources(textResourcesPath);
+            TextResources textResourcesManager = new TextResources(textResourcesWithTwoKeysPath);
             textResourcesManager.LoadResources();
 
             Assert.AreEqual(2, textResourcesManager.Values.Count);
@@ -28,7 +29,7 @@ namespace SwissAddinKnife.Test.TextResourcesEditor
         [Test]
         public void LoadKeys()
         {
-            TextResources textResourcesManager = new TextResources(textResourcesPath);
+            TextResources textResourcesManager = new TextResources(textResourcesWithTwoKeysPath);
             textResourcesManager.LoadResources();
 
             Assert.IsTrue(textResourcesManager.Values.ContainsKey("key1"));
@@ -38,7 +39,7 @@ namespace SwissAddinKnife.Test.TextResourcesEditor
         [Test]
         public void LoadValues()
         {
-            TextResources textResourcesManager = new TextResources(textResourcesPath);
+            TextResources textResourcesManager = new TextResources(textResourcesWithTwoKeysPath);
             textResourcesManager.LoadResources();
 
             Assert.AreEqual("value 1", textResourcesManager.Values["key1"]);
