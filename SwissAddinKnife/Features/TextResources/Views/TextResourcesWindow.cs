@@ -26,16 +26,18 @@ namespace SwissAddinKnife.Features.TextResources.Views
         private void BuildUI()
         {
             _scrolledWindow = new ScrolledWindow();
-            this.Add(_scrolledWindow);
+            VBox vBox = new VBox();
+
+            this.Add(vBox);
 
             _resourcesListStore = new ListStore(typeof(string));
             _textResourcesTreeView = new TreeView();
 
             var filterWidget = CreateFilterWidget();
-            VBox vBox = new VBox();
             vBox.PackStart(filterWidget, false, false, 5);
-            vBox.PackEnd(_textResourcesTreeView, true, true, 5);
-            _scrolledWindow.AddWithViewport(vBox);
+            vBox.PackEnd(_scrolledWindow, true, true, 5);
+
+            _scrolledWindow.Add(_textResourcesTreeView);
 
             BuildTextResourcesTreeView();
         }
