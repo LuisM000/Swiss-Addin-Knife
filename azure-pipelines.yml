@@ -19,6 +19,8 @@ jobs:
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '**/*.sln'
+        packagesdirectory: '..\packages'
+
        
     - script: msbuild /p:Configuration=Release SwissAddinKnife/SwissAddinKnife.csproj
       displayName: 'Build SwissAddinKnife'
