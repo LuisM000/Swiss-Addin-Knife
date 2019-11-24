@@ -33,8 +33,6 @@ jobs:
     - script: msbuild /p:Configuration=Release SwissAddinKnife.Test/SwissAddinKnife.Test.csproj
       displayName: 'Build SwissAddinKnife Test'
 
-    - script: ./msbuild_mono_5_20_1 /p:Configuration=Release /p:OutDir=./bin/Release/mono5_20_1 SwissAddinKnife/SwissAddinKnife.csproj
-      displayName: 'Build SwissAddinKnife with Mono 5.20.1'
        
     - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack SwissAddinKnife/bin/Release/net471/SwissAddinKnife.dll
       displayName: 'Build vs4mac Addin'
@@ -45,28 +43,6 @@ jobs:
     - task: PublishBuildArtifacts@1
       inputs:
         artifactName: 'Addin'
-        targetPath: $(Build.ArtifactStagingDirectory)
-
-    - task: GitHubRelease@0
-      inputs:
-        gitHubConnection: Connection pipeline
-        repositoryName: '$(Build.Repository.Name)'
-        action: 'create'
-        target: '$(Build.SourceVersion)'        
-        tagSource: 'auto'
-
-
-
-    - script: /Applications/Visual\ Studio.app/Contents/MacOS/vstool setup pack SwissAddinKnife/bin/Release/mono5_20_1/SwissAddinKnife.dll
-      displayName: 'Build vs4mac Addin with Mono 5.20.1'
-      
-    
-    - script: mv SwissAddinKnife.*.mpack  $(Build.ArtifactStagingDirectory)/
-      displayName: 'Copy addin with Mono 5.20.1'
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        artifactName: 'Addin with Mono 5.20.1'
         targetPath: $(Build.ArtifactStagingDirectory)
 
     - task: GitHubRelease@0
