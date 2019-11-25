@@ -254,9 +254,21 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
                 }
             }
         }
+
         async void OnGenerateClicked(object sender, EventArgs args)
         {
-            await GenerateImageAssets();
+            IList<Project> selectedProjects;
+            using (var selectProjectsDialog = new SelectProjectsDialog(solution.GetAllProjects().Where(p => p.IsIOSProject() || p.IsAndroidProject()).ToList()))
+            {
+                selectProjectsDialog.Run(this);
+                selectedProjects = selectProjectsDialog.Result;
+            }
+
+            if(selectedProjects!= null && selectedProjects.Any())
+            {
+                await GenerateImageAssets(selectedProjects);
+            }
+
         }
         void Loading(bool isLoading)
         {
@@ -264,7 +276,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
         }
 
 
-        async Task GenerateImageAssets()
+        async Task GenerateImageAssets(IList<Project> projects)
         {
             var progressMonitor = IdeApp.Workbench.ProgressMonitors.GetStatusProgressMonitor("Generating assets...", Stock.StatusSolutionOperation, false, true, false);
             Loading(true);
@@ -291,7 +303,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
                         outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForAndroid4xWithoutDrawable;
                 }
 
-                foreach (var project in solution.GetAllProjects().Where(p => p.IsAndroidProject()))
+                foreach (var project in projects.Where(p => p.IsAndroidProject()))
                 {
                     var outputFolder = Path.Combine(project.BaseDirectory, "Resources");
                     await GenerateAssetsAsync(project, outputFolder, overwriteFiles, outputPropertiesFactory);
@@ -311,7 +323,7 @@ namespace SwissAddinKnife.Features.AssetsGenerator.Views
                     outputPropertiesFactory = ImageOutputPropertiesFactory.CreateForIOS4x;
                 }
 
-                foreach (var project in solution.GetAllProjects().Where(p => p.IsIOSProject()))
+                foreach (var project in projects.Where(p => p.IsIOSProject()))
                 {
                     var outputFolder = Path.Combine(project.BaseDirectory, "Resources");
                     await GenerateAssetsAsync(project, outputFolder, overwriteFiles, outputPropertiesFactory);
