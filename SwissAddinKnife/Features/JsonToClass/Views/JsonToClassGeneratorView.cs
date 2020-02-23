@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Text;
 using MonoDevelop.Ide;
 using MonoDevelop.Ide.Gui;
 using SwissAddinKnife.Features.JsonToClass.Exceptions;
@@ -36,7 +38,7 @@ namespace SwissAddinKnife.Features.JsonToClass.Views
             {
                 MessageDialog.ShowWarning("Ouch!", "Something has happened. You may not have QuickType installed");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 IdeApp.Workbench.StatusBar.ShowError("The model could not be generate");
             }
